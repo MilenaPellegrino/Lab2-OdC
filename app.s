@@ -1,3 +1,6 @@
+	//.include "help.s"
+	.include "drawings.s"
+
 	.equ SCREEN_WIDTH,   640
 	.equ SCREEN_HEIGH,   480
 	.equ BITS_PER_PIXEL, 32
@@ -11,10 +14,12 @@
 main:
 	// x0 contiene la direccion base del framebuffer
 	mov x20, x0 // Guarda la dirección base del framebuffer en x20
-	//---------------- CODE HERE ------------------------------------
 
-	movz x10, 0xC7, lsl 16
-	movk x10, 0x1585, lsl 00
+	//---------------- CODE HERE ------------------------------------
+	// Color de fondo: azul oscuro 
+	#0F061B
+	movz x10, 0x0f06, lsl 16
+	movk x10, 0x1b, lsl 00
 
 	mov x2, SCREEN_HEIGH         // Y Size
 loop1:
@@ -26,6 +31,50 @@ loop0:
 	cbnz x1,loop0  // Si no terminó la fila, salto
 	sub x2,x2,1    // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
+
+
+	// Trato de pintar pixeles en pantalla:
+	mov x3, 185 		// Coordenada x donde lo voy a pintar
+	mov x4, 240		// Coordenada y donde lo voy a pintar
+	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
+	bl pintar_pixel
+
+	mov x3, 455		// Coordenada x donde lo voy a pintar
+	mov x4, 240		// Coordenada y donde lo voy a pintar
+	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
+	bl pintar_pixel
+
+	mov x3, 320		// Coordenada x donde lo voy a pintar
+	mov x4, 105		// Coordenada y donde lo voy a pintar
+	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
+	bl pintar_pixel
+
+	mov x3, 320		// Coordenada x donde lo voy a pintar
+	mov x4, 375		// Coordenada y donde lo voy a pintar
+	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
+	bl pintar_pixel
+	
+	// Trato  con la funcion del rectangulo 
+	mov x3, 540 	// Coordenada en x 
+	mov x4, 380		// Coordenada en y 
+	mov x1, 100		// Ancho del recntagulo
+	mov x2, 100		// Altura del recntagulo = ancho del rectangulo para hacer un cuadrado
+	mov w10, 0xFFFFFF 
+	bl dibujar_rectangulo
+
+	// Trato de dibujar una circunsferencia 
+	mov x3, 320 		// Coor x del centro de la circun
+	mov x4, 240		// Coord y del centro de la circuns 
+	mov x5, 150		// Radio de la circuns 
+	mov w10, 0xFFFFFF  // COLOR 
+	bl dibujar_circulo
+
+	// Trato de dibujar la estrell 1 
+	mov x2, 100
+	mov x1, 200
+	bl dibujar_estrella1
+
+
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
