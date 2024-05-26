@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Lab2-OdC
 Trabajo de Laboratorio n°2: VC FrameBuffer en QEMU emulando una RPi
 
@@ -13,6 +12,7 @@ Trabajo de Laboratorio n°2: VC FrameBuffer en QEMU emulando una RPi
     
   ● Emular el comportamiento de los pines de entrada-salida de propósitos generales
     (GPIO) del microprocesador ARM usando el teclado de la computadora
+    
 =======
 # Lab Org. y Arq. de Computadoras
 
