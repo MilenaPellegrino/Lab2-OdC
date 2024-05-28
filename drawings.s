@@ -2,8 +2,336 @@
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480	
 
+<<<<<<< HEAD
 
 // ====== DIBUJAR ESTRELLA TIPO 1 ======
+=======
+// Estrella de tipo 1 (cuadradito amarillo con cuadraditos en la punta)
+// Parametros: x2 = x, x1 = y
+// Tamano y color estaticos (por ahora)
+dibujar_estrella1: 
+    sub SP, SP, 8   // Reservamos espacio en la pila 						
+	stur X30, [SP, 0]   // Guardamos el valor de x30 en la pila
+
+    // Dibujo el cuadrado principal:
+    mov x3, x2  // Posicion x del centro de la estrella
+    mov x4, x1  // Poscion y del centro de la estrella 
+    mov x1, 3  // Ancho del centro de la estrella = 10
+    mov x2, 3  // Altura del centro de la estrella = 10
+    //mov w10, 0xFFCF13   // Color amarillo para la estrella
+    mov w10, 0xFFFFFF
+    bl dibujar_rectangulo
+
+fondo_estrella:
+    sub SP,SP,8     //reservamos espacio en la pila
+    stur x30,[SP]	// guardamos el valor de x3 en la pila
+    mov w10, 0xFFFFFF // COLOR
+//----------------filas_del_principio-------------------------
+	mov x3, 600
+	mov x5, 0 //reseteo el radio
+	mov x4, 8 //reseteo la fila
+        mov x11, 75	
+        bl fila_circulos
+
+//mismo circulo, diferente radio
+    mov w10, 0xFFFF00
+	mov x3, 580 // elijo la posicion en el eje x
+	mov x5, 0 //reseteo el radio
+	mov x4, 45 //reseteo la fila
+	mov x11, 58
+    bl fila_circulos
+
+    mov w10, 0xFFFFFF
+    mov x3, 580 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 45 //reseteo la fila
+	mov x11, 58
+        bl fila_circulos
+//hasta aca
+////------------------filas_del_medio-------------------------//
+	
+    mov x3, 639
+	mov x5, 0 //reseteo el radio
+	mov x4, 70 //reseteo la fila
+    mov x11, 71	
+        bl fila_circulos
+
+// mismo circulo, diferente radio
+    mov w10, 0xFFFF00
+	mov x3, 600 // elijo la posicion en el eje x
+	mov x5, 0 //reseteo el radio
+	mov x4, 110 //reseteo la fila
+	mov x11, 75
+        bl fila_circulos
+	mov w10, 0xFFFFFF
+    mov x3, 600 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 110 //reseteo la fila
+	mov x11, 75
+        bl fila_circulos
+// hasta aca
+//
+	mov x3, 630
+	mov x5, 0 //reseteo el radio
+	mov x4, 150 //reseteo la fila
+    mov x11, 45	
+        bl fila_circulos
+
+//mismo circulo, diferente radio
+    mov w10, 0xFFFF00
+	mov x3, 600 // elijo la posicion en el eje x
+	mov x5, 0 //reseteo el radio
+	mov x4, 200 //reseteo la fila
+	mov x11, 75
+        bl fila_circulos
+
+    mov w10, 0xFFFFFF
+    mov x3, 600 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 200 //reseteo la fila
+	mov x11, 75
+        bl fila_circulos
+//hasta aca
+//aca
+	mov x3, 630
+	mov x5, 0 //reseteo el radio
+	mov x4, 250 //reseteo la fila
+    mov x11, 105	
+        bl fila_circulos
+
+//mismo circulo, diferente radio
+    mov w10, 0xFFFF00
+	mov x3, 580 // elijo la posicion en el eje x
+	mov x5, 0 //reseteo el radio
+	mov x4, 300 //reseteo la fila
+	mov x11, 58
+        bl fila_circulos
+
+    mov w10, 0xFFFFFF
+    mov x3, 580 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 300 //reseteo la fila
+	mov x11, 58
+        bl fila_circulos
+//
+	mov x3, 640
+	mov x5, 0 //reseteo el radio
+	mov x4, 360 //reseteo la fila
+    mov x11, 80	
+        bl fila_circulos
+
+//---------relleno-----------//
+	mov x3, 45
+	mov x5, 0 //reseteo el radio
+	mov x4, 245 //reseteo la fila
+    mov x11, 45	
+        bl fila_circulos
+    mov w10, 0xFFFFFF
+    mov x3, 45 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 245 //reseteo la fila
+	mov x11, 45
+        bl fila_circulos
+	mov x3, 20
+	mov x5, 0 //reseteo el radio
+	mov x4, 367 //reseteo la fila
+    mov x11, 20	
+        bl fila_circulos
+    mov w10, 0xFFFFFF
+    mov x3, 20 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 367 //reseteo la fila
+	mov x11, 20
+        bl fila_circulos
+//--------------------filas_fianles-----------------------------------//
+
+    mov x3, 639
+	mov x5, 0 //reseteo el radio
+	mov x4, 450 //reseteo la fila
+        mov x11, 71	
+        bl fila_circulos
+
+// mismo circulo, diferente radio
+    mov w10, 0xFFFF00
+	mov x3, 600 // elijo la posicion en el eje x
+	mov x5, 0 //reseteo el radio
+	mov x4, 400 //reseteo la fila
+	mov x11, 75
+        bl fila_circulos
+
+    mov w10, 0xFFFFF0
+    mov x3, 600 // elijo la posicion en el eje x
+	mov x5, 1 //reseteo el radio
+	mov x4, 400 //reseteo la fila
+	mov x11, 75
+        bl fila_circulos
+// hasta aca
+
+//---------------------------------------------------//
+    ldur x30,[SP]   
+    add SP,SP,8
+ret
+
+fila_circulos:
+    add x6,x3,0
+    add x7,x4,0
+    add x8,x5,0
+    sub SP,SP,8     //reservamos espacio en la pila
+    stur x30,[SP]	// guardamos el valor de x3 en la pila
+
+    bl dibujar_circulo
+    add x3,x6,0
+    add x4,x7,0
+    add x5,x8,0
+    sub x3, x3, x11    // Decrementa en 100 en lugar de 200
+    cbnz x3, fila_circulos // Comprueba si x6 aún es positivo
+    //reseteo los flags
+    mov x3, 0
+    mov x5, 0
+    mov x4, 0
+    ldur x30,[SP]   
+    add SP,SP,8
+ret
+
+
+draw_saturn:
+	sub SP,SP,8
+	stur x30,[SP]
+	add x11,x3,0
+	lsr x6,x5,3
+	add x7,x4,0
+	add x8,x4,0
+	movz x10,0xb6,lsl 16
+	movk x10,0x8355,lsl 00
+	bl dibujar_circulo
+	bl bucket
+	movz x10,0xa7,lsl 16
+	movk x10,0x7c53,lsl 00
+	bl set_x3_x5
+	bl bridge
+	bl upper_bridge_and_bucket
+	movz x10,0x99,lsl 16 
+	movk x10,0xcecc,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xec,lsl 16
+	movk x10,0x8735,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xff,lsl 16 
+	movk x10,0xd8ba,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0x51,lsl 16
+	movk x10,0x220c,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0x33,lsl 16
+	movk x10,0x0000,lsl 00 
+	bl lower_bridge_and_bucket
+	movz x10,0xe0,lsl 16
+	movk x10,0xa06a,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	b end_saturn
+upper_bridge_and_bucket:
+	sub SP,SP,8
+	stur x30,[SP]
+	sub x7,x7,x6
+	add x4,x7,0
+	add x3,x11,0
+	bl set_x3_x5
+	bl bridge
+	add x3,x11,0
+	add x4,x7,x6
+	bl bucket
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+lower_bridge_and_bucket:
+	sub SP,SP,8
+	stur x30,[SP]
+	add x8,x8,x6
+	add x4,x8,0
+	add x3,x11,0
+	bl set_x3_x5
+	bl bridge
+	add x3,x11,0
+	add x4,x8,0
+	bl bucket
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+end_saturn:
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+
+
+
+set_x3_x5:
+	sub SP,SP,8
+	stur x30,[SP]
+	sub SP,SP,8
+	stur x9,[SP]
+	sub SP,SP,8
+	stur x8,[SP]
+	sub SP,SP,8
+	stur x2,[SP]
+	sub SP,SP,8
+	stur x1,[SP]
+	bl dir_pixel
+	add x5,x3,0
+	add x1,x0,0
+	ldur w9,[x0]
+compare_x3:
+	sub x0,x0,4
+	ldur w8,[x0]
+	cmp w8,w9
+	b.eq decr_x3
+	b.ne compare_x5
+decr_x3:
+	sub x3,x3,1
+	b compare_x3
+compare_x5:
+	add x1,x1,4
+	ldur w8,[x1]
+	cmp w8,w9
+	b.eq acrem_x5
+	b.ne end_aux
+acrem_x5:
+	add x5,x5,1
+	b compare_x5
+end_aux:
+	ldur x1,[SP]
+	add SP,SP,8
+	ldur x2,[SP]
+	add SP,SP,8
+	ldur x8,[SP]
+	add SP,SP,8
+	ldur x9,[SP]
+	add SP,SP,8
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+// Estrella 
+>>>>>>> 8a923674543fe46910d40676ff3eb0ef4959f2e2
 // Parametros: x3 = x, x4 = y, w10 = color
 // Tamano  estatico (por ahora) (hecha con dos triangulos)
 
@@ -185,46 +513,3 @@ add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-dibujar_estrella_fugaz: 
-    mov x3, 200          // Initial x coordinate
-	mov x4, 200          // Initial y coordinate
-	mov x1, 120          // Length of the row
-	mov w10, 0xFFFF   // Color (assuming the color is passed in w10)
-	bl pintar_fila      // Call the function
-ret
-
-*/
-// ESTRELLA TITILANDO (PARA LA ANIMACION NO SIRVE PARA ESTO)
-// desde x = x3, y = x4, de una longitud de x1 y un color w10
-/* dibujar_estrella2:
-	mov x10, x1			// Me guardo en x10 la longitud para ir decrementando
-	mov x11, x3			// Me guardo en x11 la coordenada inicial de x (es lo que voy a ir modificando)
-loop_est2:
-	bl pintar_pixel		// pintamos un pixel en la coordenada (x, y). No es necesario mover variables ya que usamos los mismo registros pra obtener las coordenadas
-	add x11, x11, 1		// Voy al siguiente pixel en x 
-	sub x10, x10, 1		// Decremento mi contador 
-	cmp x10, 0 		// if mi contador != 0 sigo pintando 
-	b.ne loop_est2		// if mi contado == 0, dejo de pintar ya que pinte toda la longitud de la fila
-ret  */
