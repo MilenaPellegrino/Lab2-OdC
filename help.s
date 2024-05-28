@@ -316,3 +316,110 @@ pintar_circulo:
 	add sp, sp, 8
 	ret    
 
+//x3=coordenada x, x4=coordenada y, x10=color a pintar
+bucket: 
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur X30,[SP,0]       	//Guardamos el valor de x30 en la pila
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur X3,[SP,0]       	//Guardamos el valor de x3 en la pila
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur X4,[SP,0]       	//Guardamos el valor de x4 en la pila	
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur X5,[SP,0]       	//Guardamos el valor de x4 en la pila	
+	movz x9,0x0,lsl 00
+	bl dir_pixel  			//guardamos en x0 la direccion del pixel a pintar
+	ldur w5,[x0]   			//en x5 guardamos el color del pixel
+pixel_painter:
+	stur w10,[x0]
+	sub x0,x0,2560			//ponemos en x0 la dir del pixel superior
+	bl compare
+	add x0,x0,2556			//ponemos en x0 la dir del pixel anterior
+	bl compare
+	add x0,x0,8				//ponemos en x0 la dir del pixel posterior
+	bl compare
+	add x0,x0,2556			//ponemos en x0 la dir del pixel inferior
+	bl compare
+	cbz x9,end_bucket
+	cbnz x9,next_dir
+compare:
+	ldur w8,[x0]	 		//cargamos el color del pixel a comparar en w8
+	cmp w8,w5			//compara los colores de w8 con el color del primer pixel
+	sub x1,x9,1
+	lsl x1,x1,3
+	b.eq check_dir_SP 
+	ret
+check_dir_SP:
+	cbz x9,dir_to_sp
+	add SP,SP,x1
+	ldur x2,[SP]
+	cmp x0,x2
+	sub SP,SP,x1
+	b.eq ret
+	cbz x1,dir_to_sp
+	sub x1,x1,8
+	cbnz x1,check_dir_SP
+dir_to_sp:
+	sub SP,SP,8
+	stur x0,[SP,0]
+	add x9,x9,1
+ret:
+	ret
+next_dir:
+	ldur x0,[SP,0]
+	add SP,SP,8
+	sub x9,x9,1
+	b pixel_painter
+end_bucket:
+	ldur x5,[SP,0]
+	add SP,SP,8
+	ldur x4,[SP,0]
+	add SP,SP,8
+	ldur x3,[SP,0]
+	add SP,SP,8
+	ldur x30,[SP,0]
+	add SP,SP,8
+	ret
+
+
+//x3=xa,x4=altura,x5=xb,w10=color a pintar
+//la distancia entre el xa y xb debe ser mayor a 2 y xb>xa
+bridge:
+	sub SP,SP,8    	//|Reservo espacio en SP para almacenar x30
+	stur x30,[SP] 	//|Almaceno x30
+	sub SP,SP,8		//|Reservo espacio en SP para almacenar x3
+	stur x3,[SP]  	//|Almaceno x3
+	sub x7,x5,x3    //Almaceno la distancia entre xa y xb
+	lsr x6,x7,2     //Divido la distancia por 4 asi se la altura que debe tener
+	add x7,x7,2		//Le sumo a la distancia 2 para contar los pixeles de los extremos
+	bl dir_pixel    //Almaceno la direccion del primer pixel (Inicio del puente) en x0
+	add x1,x0,0		//Guardo la direccion del primer pixel en x1
+	add x3,x5,0     //Copio xb en x3 para poder usar la siguiente func
+	bl dir_pixel    //Almaceno la direccion del segundo pixel (Fin del puente) en x0
+	movz x8,0x2,lsl 00 //En x8 almaceno la cantidad de pixeles que quiero sean pintados de cada lado en cada altura
+	add x9,x8,0
+bridge_painter:
+	stur w10,[x1]	//Pinto el inicio del puente
+	stur w10,[x0]	//Pinto el final del puente
+	add x1,x1,4		//Avanzo el pixel inicial una posicion
+	sub x0,x0,4     //Retrocedo el pixel final una posicion
+	sub x9,x9,1		//Resto 1 a x8
+	sub x7,x7,2		//A x7 le resto dos para saber que pinte dos pixeles
+	cmp x7,0x0
+	b.le end_bridge
+	cbnz x9,bridge_painter	//Si x9 no es cero vuelvo a pintar pixeles en esta linea
+	cbnz x6,decounter_high	//Si x6 no es cero bajo una linea los pixeles a pintar
+	cbnz x7,bridge_painter	//Si no complete el puente vuelvo a pintar
+decounter_high:
+	add x9,x8,0        //    
+	add x8,x8,1		//
+	add x0,x0,2560			//Baja el pixel final
+	add x1,x1,2560			//Baja el pixel inicial
+	sub x6,x6,1				//Le resta uno a la altura restante
+	b bridge_painter		//Vuelve a pintar
+end_bridge:
+	ldur x3,[SP]
+	add SP,SP,8
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+//Al terminar x3,x5,w10 conservan los valores iniciales y pone a x6,x7,x8 en 0

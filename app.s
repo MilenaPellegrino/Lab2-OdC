@@ -17,6 +17,7 @@ main:
 
 	//---------------- CODE HERE ------------------------------------
 	// Color de fondo: azul oscuro 
+	#0F061B
 	movz x10, 0x0f06, lsl 16
 	movk x10, 0x1b, lsl 00
 
@@ -30,26 +31,46 @@ loop0:
 	cbnz x1,loop0  // Si no terminó la fila, salto
 	sub x2,x2,1    // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
+	// Trato de dibujar una circunsferencia 
+	mov x3, 320 		// Coor x del centro de la circun
+	mov x4, 240		// Coord y del centro de la circuns 
+	mov x5, 150		// Radio de la circuns 
 	
-
-// Prametros x3 = x, x4 = y, w10 = color del pixel que vayamos a pintar 
-	mov x3, 0
-	mov x4, 0
-	mov w10, 0xFFFFFF
-	bl pintar_pixel
-
-	// Parametros: x3 = x, x4 = y, ancho del rectangulo = x1, altura del rectangulo = x2, color = w10
-	mov x3, 185 		// Coordenada x donde lo voy a pintar
-	mov x4, 240		// Coordenada y donde lo voy a pintar
-	mov x1, 100
-	mov x2, 50
-	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
-	bl draw_satelite
-
+	//Dibuja saturno
+	movz x10,0xb6,lsl 16
+	movk x10,0x8355,lsl 00
+	bl dibujar_circulo
+	mov x3,320
+	mov x4,240
+	bl bucket
+	add x5,x3,150
+	sub x3,x3,150
+	movz x10,0xa7,lsl 16
+	movk x10,0x7c53,lsl 00
+	bl bridge
+	add x3,x3,3
+	sub x5,x5,3
+	sub x4,x4,30
+	bl bridge
+	sub SP,SP,8
+	stur x3,[SP]
+	mov x3,320
+	add x4,x4,30
+	bl bucket
+	ldur x3,[SP]
+	add SP,SP,8
+	add x4,x4,30
+	bl bridge
+	add x3,x3,10
+	sub x5,x5,10
+	sub x4,x4,90
+	bl bridge
+	add x4,x4,120
+	bl bridge
+	//Termina saturno""
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
-
 	// Atención: se utilizan registros w porque la documentación de broadcom
 	// indica que los registros que estamos leyendo y escribiendo son de 32 bits
 
@@ -75,4 +96,3 @@ loop0:
 
 InfLoop:
 	b InfLoop
-
