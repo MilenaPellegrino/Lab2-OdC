@@ -211,6 +211,10 @@ loop_trian3_inv:
 dibujar_circulo:
     sub sp, sp, 8
     stur x30, [sp, 0]
+	sub SP,SP,8
+	stur x4,[SP]
+	sub SP,SP,8
+	stur x3,[SP]
 
     mov x23, x3     // En x23 guardo la coordenada x 
     mov x24, x4     // En x24 guardo la coordenada y
@@ -293,6 +297,10 @@ fin_actualizacion:
     b.lt loop_circulo
 
 // Liberamos los recursos utilizados 
+ldur x3,[SP]
+add SP,SP,8
+ldur x4,[SP]
+add SP,SP,8
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret  
@@ -319,7 +327,13 @@ pintar_circulo:
 //x3=coordenada x, x4=coordenada y, x10=color a pintar
 bucket: 
 	sub SP,SP,8  		  	//Reservamos espacio en la pila
-	stur X30,[SP,0]       	//Guardamos el valor de x30 en la pila
+	stur x30,[SP,0]       	//Guardamos el valor de x30 en la pila	
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur x7,[SP,0]       	//Guardamos el valor de x7 en la pila
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur x8,[SP,0]       	//Guardamos el valor de x8 en la pila
+	sub SP,SP,8  		  	//Reservamos espacio en la pila
+	stur x9,[SP,0]       	//Guardamos el valor de x9 en la pila
 	movz x9,0x0,lsl 00		//Usamos x9 para llevar registro de cuanta SP es usada, lo inicializo en 0
 	bl dir_pixel  			//guardamos en x0 la direccion del pixel a pintar
 	ldur w7,[x0]   			//en x7 guardamos el color del pixel
@@ -352,12 +366,16 @@ next_dir:
 	sub x9,x9,1				//Decrementa el contador de uso de SP
 	b pixel_painter			//Va a pintar el pixel
 end_bucket:
+	ldur x9,[SP,0]			//Devuelve el valor original de x9
+	add SP,SP,8				//Libera espacio del SP
+	ldur x8,[SP,0]			//Devuelve el valor original de x8
+	add SP,SP,8				//Libera espacio del SP
+	ldur x7,[SP,0]			//Devuelve el valor original de x7
+	add SP,SP,8				//Libera espacio del SP
 	ldur x30,[SP,0]			//Devuelve el valor original de x30
 	add SP,SP,8				//Libera espacio del SP
-	movz x7,0x0,lsl 00      //Pone x7 a 0
-	movz x8,0x0,lsl 00      //Pone x7 a 0
 	ret						//Termina la funcion
-//Pone a x7,x8,x9 en 0 
+//
 
 
 //x3=xa, x4=y, x5=xb, w10=color a pintar
@@ -365,6 +383,12 @@ end_bucket:
 bridge:
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x30
 	stur x30,[SP] 			//|Almaceno x30
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x9
+	stur x9,[SP] 			//|Almaceno x9
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x8
+	stur x8,[SP] 			//|Almaceno x8
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x7
+	stur x7,[SP] 			//|Almaceno x7
 	sub SP,SP,8				//|Reservo espacio en SP para almacenar x3
 	stur x3,[SP]  			//|Almaceno x3
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x30
@@ -400,8 +424,13 @@ end_bridge:
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x3,[SP]			//|Devuelve a x3 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
+	ldur x7,[SP]			//|Devuelve a x7 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
+	ldur x8,[SP]			//|Devuelve a x8 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
+	ldur x9,[SP]			//|Devuelve a x9 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
 	ldur x30,[SP]			//|Devuelve a x30 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
-	movz x8,0x0,lsl 00		//|Guardo 0 en x8
 	ret						//Termina la funcion
-//Pone a x7,x8,x9 en 0
+//

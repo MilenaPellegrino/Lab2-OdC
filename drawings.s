@@ -183,12 +183,116 @@ ret
 // ====== FIN SATELITE ======
 
 
+draw_saturn:
+	sub SP,SP,8
+	stur x30,[SP]
+	add x11,x3,0
+	lsr x6,x5,2
+	add x7,x4,0
+	add x8,x4,0
+	movz x10,0xb6,lsl 16
+	movk x10,0x8355,lsl 00
+	bl dibujar_circulo
+	bl bucket
+	movz x10,0xa7,lsl 16
+	movk x10,0x7c53,lsl 00
+	bl set_x3_x5
+	bl bridge
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xec,lsl 16
+	movk x10,0x8735,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xff,lsl 16 
+	movk x10,0xd8ba,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0x33,lsl 16
+	movk x10,0x0000,lsl 00 
+	bl lower_bridge_and_bucket
+	movz x10,0xe0,lsl 16
+	movk x10,0xa06a,lsl 00
+	bl lower_bridge_and_bucket
+	b end_saturn
+upper_bridge_and_bucket:
+	sub SP,SP,8
+	stur x30,[SP]
+	sub x7,x7,x6
+	add x4,x7,0
+	add x3,x11,0
+	bl set_x3_x5
+	bl bridge
+	add x3,x11,0
+	add x4,x7,x6
+	bl bucket
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+lower_bridge_and_bucket:
+	sub SP,SP,8
+	stur x30,[SP]
+	add x8,x8,x6
+	add x4,x8,0
+	add x3,x11,0
+	bl set_x3_x5
+	bl bridge
+	add x3,x11,0
+	add x4,x8,0
+	bl bucket
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
+end_saturn:
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
 
-
-
-
-
-
+set_x3_x5:
+	sub SP,SP,8
+	stur x30,[SP]
+	sub SP,SP,8
+	stur x9,[SP]
+	sub SP,SP,8
+	stur x8,[SP]
+	sub SP,SP,8
+	stur x2,[SP]
+	sub SP,SP,8
+	stur x1,[SP]
+	bl dir_pixel
+	add x5,x3,0
+	add x1,x0,0
+	ldur w9,[x0]
+compare_x3:
+	sub x0,x0,4
+	ldur w8,[x0]
+	cmp w8,w9
+	b.eq decr_x3
+	b.ne compare_x5
+decr_x3:
+	sub x3,x3,1
+	b compare_x3
+compare_x5:
+	add x1,x1,4
+	ldur w8,[x1]
+	cmp w8,w9
+	b.eq acrem_x5
+	b.ne end_aux
+acrem_x5:
+	add x5,x5,1
+	b compare_x5
+end_aux:
+	ldur x1,[SP]
+	add SP,SP,8
+	ldur x2,[SP]
+	add SP,SP,8
+	ldur x8,[SP]
+	add SP,SP,8
+	ldur x9,[SP]
+	add SP,SP,8
+	ldur x30,[SP]
+	add SP,SP,8
+	ret
 
 
 
@@ -225,3 +329,4 @@ loop_est2:
 	cmp x10, 0 		// if mi contador != 0 sigo pintando 
 	b.ne loop_est2		// if mi contado == 0, dejo de pintar ya que pinte toda la longitud de la fila
 ret  */
+
