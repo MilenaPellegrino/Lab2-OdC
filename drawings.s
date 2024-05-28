@@ -200,14 +200,14 @@ draw_saturn:
 	movz x10,0xb6,lsl 16
 	movk x10,0x8355,lsl 00
 	bl dibujar_circulo
+	movz x25,0x1,lsl 00
 	bl bucket
-	movz x10,0xa7,lsl 16
-	movk x10,0x7c53,lsl 00
+	movz x25,0x0,lsl 00
+	movz x10,0x99,lsl 16
+	movk x10,0xcecc,lsl 00
 	bl set_x3_x5
 	bl bridge
 	bl upper_bridge_and_bucket
-	movz x10,0x99,lsl 16 
-	movk x10,0xcecc,lsl 00
 	bl upper_bridge_and_bucket
 	movz x10,0xec,lsl 16
 	movk x10,0x8735,lsl 00
@@ -233,17 +233,15 @@ draw_saturn:
 	movz x10,0xe0,lsl 16
 	movk x10,0xa06a,lsl 00
 	bl lower_bridge_and_bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
+	movz x10,0x51,lsl 16
+    movk x10,0x220c,lsl 00
+	bl lower_bridge_and_bucket
 	bl lower_bridge_and_bucket
 	movz x10,0xc8,lsl 16
 	movk x10,0x4903,lsl 00
 	bl lower_bridge_and_bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	bl lower_bridge_and_bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
+	movz x10,0xd4,lsl 16
+	movk x10,0xac0d,lsl 00
 	bl lower_bridge_and_bucket
 	b end_saturn
 upper_bridge_and_bucket:
