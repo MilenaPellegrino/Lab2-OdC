@@ -2,6 +2,11 @@
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480	
 
+// CONVENCIONES DE USO DE VARIABLES: 
+///////		x = x3, y = x4
+///////		dato del color = w10 
+/////// 	anchos = x1, alturas = x2 
+
 // Calcular la direccion de un pixel
 // Parametros: x3 = x, x4 = y. Representan las coordenadas dle pixel que queremos calcular
 
@@ -16,7 +21,6 @@ ret
 
 // Pintar un pixel por pantalla 
 // Prametros x3 = x, x4 = y, w10 = color del pixel que vayamos a pintar 
-
 pintar_pixel: 
 
     // Primero verifiquemos que las coordenadas esten dentro de la pantalla: 
@@ -39,11 +43,11 @@ pintar_pixel:
     add sp, sp, #16     // LIberamos espacio en la pila 
 
     // Pintamos ell pixel:
-    str w10, [x0]   // Almacena el color en la dirección calculada por dir_pixel 
+    str w10, [x0]   	// Almacena el color en la dirección calculada por dir_pixel 
 ret 
 
 invalid_coordinates:
-ret     // Ver si hacer otra cosa al pasar una coordenada fuera de rango
+ret   // Ver si hacer otra cosa al pasar una coordenada fuera de rango
 
 
 // Dibujar un rectangulo por pantalla 
@@ -73,6 +77,134 @@ dibujar_rectangulo:
 			cbnz x9, rectLoop	    // si no termine de pintar la ultima fila, vuelvo a pintar una fila
 ret
 
+// DIBUJAR FILA
+// PARAMETROS: x3 = x, x4 = y, X6 = tamano, w10 = color
+pintar_fila:
+	mov x16, x30
+	mov x10, x6		   // x10 = contador = tamano 
+loop_fila:
+	bl pintar_pixel    // Pintamos el pixel
+	add x3, x3, 1     // Avanzamos al siguiente
+	sub x10, x10, 1   // Restamos al contador
+	cmp xzr, x10      // Comparamos el contador ocn 0
+	b.lt loop_fila      // si es menor o igual que 0 terminamos
+	sub x3, x3, x6    // Reseteo de la coordenada x
+	ret x16
+
+// DIBUJAR TRIANGULO TIPO 1
+// PARAMETROS: x3 = x, x4 = y, (coordenadas del vertice superior) x1 = tamano, w10 = color
+// ACLRACIONES: La punta del triangulo esta abajo a al derecha
+
+dibujar_triangulo1:
+sub SP, SP, 8 					
+stur X30, [SP, 0]
+
+	mov x9, x1		// Guardamos en x9 el tamano del triangulo
+	mov x13, x3		// Guardamos en x13 la posicion inicial de x
+
+	loop_trian1:
+		mov x3, x13				// En x3 reseteo a la posicion inicial del triangulo para cada nueva fila
+		mov x11, x1				// guardo el tamano
+		add x11, x11, 1			
+		sub x11, x11, x9		// Decrementamos en 1 para ir haciendo cada fila del triangulo
+
+		pintar_trian1:
+			bl pintar_pixel
+			add x3, x3, 1			//sumo 1 en x
+			sub x11, x11, 1			//resto 1 a x11 qye es el largo de la fila
+			cbnz x11, pintar_trian1 // si no llegue al final de la fila  pinto otro pixel
+			sub x13, x13, 1         // le resto 1 a la coordenada x del primer pixel de la fila almacenada en x13
+			add x4, x4, 1			// sumo 1 a la coord y
+			sub x9, x9, 1           // resto el contador de altura
+			cbnz x9, loop_trian1 // si no llegue a la ultima fila, repito
+ldr X30, [SP, 0]					 			
+add SP, SP, 8	
+ret
+
+// DIBUJAR TRIANGULO TIPO 2
+// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
+// ACLARACIONES: La punta del triangulo esta abajo a la izquierda
+
+dibujar_triangulo2:
+sub SP, SP, 8 						
+stur X30, [SP, 0]
+
+	mov x9, x1
+	mov x13, x3
+	loop_trian2:
+		mov x3, x13				//guardo en x13 la coordenada x del primer pixel de la fila
+		mov x11, x1
+			add x11, x11, 1
+		sub x11, x11, x9
+
+		pintar_trian2:
+			bl pintar_pixel
+			add x3, x3, 1	
+			sub x11, x11, 1	
+			cbnz x11, pintar_trian2
+			add x4, x4, 1			
+			sub x9, x9, 1     
+			cbnz x9, loop_trian2
+ldr X30, [SP, 0]					 			
+add SP, SP, 8	
+ret
+
+// DIBUJAR UN TRIANGULO (usando los dos anteriores)
+// (completar) idea juntar los ods triangulo para hacer un triangulo con la punta para arriba 
+
+// DIBUJAR TRIANGULO TIPO 3
+// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
+// ACLARACION: La punta esta para arriba
+
+dibujar_triangulo3:
+	mov x17, x30
+    mov x24, x6
+    mov x25, x1
+    mov x22, x3
+    mov x21, x4
+	mov x6, 1  //  x4 = x22 x1 = x23
+	bl pintar_pixel
+loop_trian3:
+	bl pintar_fila  // pintamos toda la fila
+	add x4, x4, 1  
+	bl pintar_fila
+
+	add x4, x4, 1  
+	sub x3, x3, 1  // Pasamos a la siguiente fila
+	add x6, x6, 2  
+
+	sub x1, x1, 1  // Restamos uno al tamano
+	cmp xzr, x1    //  Si el tamano es menor que 0 terminamos
+	b.lt loop_trian3  
+    mov x6, x24
+    mov x1, x25
+	ret x17
+
+// DIBUJAR UN TRIANGULO TIPO 3.1 (INVERTIDO DEL TIPO 3)
+// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
+// ACLARACION: La punta esta para abajo
+
+dibujar_triangulo3_inv:
+	mov x17, x30
+    mov x24, x6 //guardar x6 y x1 para devolverselo al final
+    mov x25, x1
+	mov x6, 1
+	bl pintar_pixel
+loop_trian3_inv:
+	bl pintar_fila 
+	sub x4, x4, 1  
+	bl pintar_fila
+	sub x4, x4, 1  
+	sub x3, x3, 1  
+	add x6, x6, 2  
+	sub x1, x1, 1  
+	cmp xzr, x1   
+	b.lt loop_trian3_inv     
+    mov x6, x24
+    mov x1, x25 
+	ret x17
+
+
 // DIBUJAR UN CIRCULO POR PANTALLA
 // Parametros: x3 = coordenada x del centro, x4 = coordenada y del centro, x5 = radio,  w10 = color
 // Aclaracion: Codigo ideado a traves de la idea del algoritmo de Bresenham
@@ -81,89 +213,106 @@ dibujar_circulo:
     stur x30, [sp, 0]
 
     mov x23, x3     // En x23 guardo la coordenada x 
-    mov x24, x4     //  En  x24 guardo la coordenada y
+    mov x24, x4     // En x24 guardo la coordenada y
 
-    mov x13, xzr			// x13 representa el desplazamiento en el eje x, lo inicializo en 0
-    mov x14, x5				// x14 guarda el desplazamiento en el eje y, lo inicializo con el valor del radio
-    mov x15, 1				// x15 va a representar el error para trazar correctamente el circulo (algoritmo de Bresenham) 
-	sub x15, x15, x5    // Error inicial restando el radio del circulo
+    mov x13, xzr            // x13 representa el desplazamiento en el eje x, lo inicializo en 0
+    mov x14, x5             // x14 guarda el desplazamiento en el eje y, lo inicializo con el valor del radio
+    mov x15, 1              // x15 va a representar el error para trazar correctamente el circulo (algoritmo de Bresenham) 
+    sub x15, x15, x5        // Error inicial restando el radio del circulo
 
 loop_circulo: 
-	mov x3, x23     // Guardo en x3, mi coordenada x inicial					
-	add x3, x3, x13     // sumo a mi coordenada x inicial el desplazamiento en x que hice
-	mov x4, x24
-	add x4, x4, x14			// sumo a mi coordenada y incial el desplamienot en y
-	bl pintar_pixel     // Pinto el pixel en esas coordenadas con desplazamiento
+    // 8 combinaciones para pintar el círculo
+    mov x3, x23
+    add x3, x3, x13
+    mov x4, x24
+    add x4, x4, x14
+    bl pintar_pixel
 
-    // Hago lo mismo para las otras combinaciones
-	mov x3, x23     
-	add x3, x3, x14      // medio de x + y
-	mov x4, x24
-	add x4, x4, x13      // medio de y + x				
-	bl pintar_pixel
+    mov x3, x23
+    add x3, x3, x14
+    mov x4, x24
+    add x4, x4, x13
+    bl pintar_pixel
 
-	mov x3, x23
-	sub x3, x3, x14    // medio de x - y
-	mov x4, x24
-	add x4, x4, x13    // medio de y + x
-	bl pintar_pixel
+    mov x3, x23
+    sub x3, x3, x14
+    mov x4, x24
+    add x4, x4, x13
+    bl pintar_pixel
 
-	mov x3, x23
-	sub x3, x3, x13   // med_x - x
-	mov x4, x24
-	add x4, x4, x14   // med_y + y
-	bl pintar_pixel
+    mov x3, x23
+    sub x3, x3, x13
+    mov x4, x24
+    add x4, x4, x14
+    bl pintar_pixel
 
-	mov x3, x23
-	sub x3, x3, x13  // med_x - x
-	mov x4, x24
-	sub x4, x4, x14  // med_y - y
-	bl pintar_pixel
+    mov x3, x23
+    sub x3, x3, x13
+    mov x4, x24
+    sub x4, x4, x14
+    bl pintar_pixel
 
-	mov x3, x23
-	sub x3, x3, x14  // med_x- y
-	mov x4, x24
-	sub x4, x4, x13  // med_y - x
-	bl pintar_pixel
+    mov x3, x23
+    sub x3, x3, x14
+    mov x4, x24
+    sub x4, x4, x13
+    bl pintar_pixel
 
-	mov x3, x23
-	add x3, x3, x14  // med_x + y
-	mov x4, x24
-	sub x4, x4, x13  // med_y - x
-	bl pintar_pixel
+    mov x3, x23
+    add x3, x3, x14
+    mov x4, x24
+    sub x4, x4, x13
+    bl pintar_pixel
 
-	mov x3, x23
-	add x3, x3, x13		// med_x + x
-	mov x4, x24
-	sub x4, x4, x14  // med_y - y
-	bl pintar_pixel
+    mov x3, x23
+    add x3, x3, x13
+    mov x4, x24
+    sub x4, x4, x14
+    bl pintar_pixel
 
-	cmp x15, xzr
-	b.lt true
-    
-    // Actualizamos las variables segun las condiciones del algoritmo 
-	sub x14, x14, 1  // y = y-1
-	add x16, x13, x13	//x16 = (2 * x)
-	add x17, x14, x14  // x17 = (2 * y)
-	add x15, x15, x16  // x15 = error + (2 * x)
-	sub x15, x15, x17	// x15 = error + (2 * x) - (2 * y)
-	add x15, x15, 1		//x15 = error + (2 * x) - (2 * y) + 1
-	b end
+    // Actualizamos el error y los desplazamientos
+    cmp x15, xzr
+    b.lt actualizar_error_menor
 
+    sub x14, x14, 1          // y = y - 1
+    add x16, x13, x13        // x16 = 2 * x
+    add x17, x14, x14        // x17 = 2 * y
+    add x15, x15, x16        // error += 2 * x
+    sub x15, x15, x17        // error -= 2 * y
+    add x15, x15, 1          // error += 1
+    b fin_actualizacion
 
-true: add x16, x13, x13  // x16 = (2 * x)
-	add x15, x15, x16  // x15 = error + (2 * x)
-	add x15, x15, 1   // x15 = error + (2 * x) + 1
+actualizar_error_menor:
+    add x16, x13, x13        // x16 = 2 * x
+    add x15, x15, x16        // error += 2 * x
+    add x15, x15, 1          // error += 1
 
-end:add x13, x13, 1
-	subs x9, x13, x14
-	b.lt loop_circulo
+fin_actualizacion:
+    add x13, x13, 1          // x = x + 1
+    subs x9, x13, x14
+    b.lt loop_circulo
 
 // Liberamos los recursos utilizados 
 ldr x30, [sp, 0]
 add sp, sp, 8
-ret	
+ret  
 
-
-
+pintar_circulo:
+//parametros x3= coordenada x del centro, x4 = coordenada y del centro,  x5 = radio, w10 = color
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+		
+	mov x23, x3  // Guardar coordenada x del centro
+	mov x24, x4  // Guardar coordenada y del centro
+		
+	circleloop:
+		bl dibujar_circulo  // Llama a la función para dibujar el círculo
+		mov x3, x23         // Restaurar coordenada x del centro
+		mov x4, x24         // Restaurar coordenada y del centro
+		sub x5, x5, 1       // Decrementar radio
+		cbnz x5, circleloop // Si el radio no es cero, repetir el bucle
+		
+	ldr x30, [sp, 0]
+	add sp, sp, 8
+	ret    
 
