@@ -7,7 +7,8 @@
 // Tamano  estatico (por ahora)
 
 dibujar_estrella: 
-	mov x18, x30
+	sub sp, sp, 8
+	stur x30, [sp, 0]
 	mov x1, 10
 	mov x9, x1
 	bl dibujar_triangulo3
@@ -18,74 +19,169 @@ dibujar_estrella:
 	mov x1, x9
 	bl dibujar_triangulo3_inv
 
-	mov x1, 5
-
-	add x3, x3, 10
-	add x4, x4, 1
-
-	bl dibujar_triangulo3
-	
-	add x3, x3, 5
-	add x4, x4, 3
-
-	mov x1, 5
-	bl dibujar_triangulo3_inv
-
-	ret x18
-
-draw_sol:
-	sub sp, sp, 8
-	stur x30, [sp, 0]
-
-	mov x3, SCREEN_WIDTH
-		lsr x9, x3, 2
-		lsr x3, x3, 1
-		add x3, x3, x9
-
-	mov x4, SCREEN_WIDTH
-		lsr x4, x4, 3
-	mov x5, 30
-	bl pintar_circulo
-
-
-	mov x1, 40
-	mov x2, 40
-	mov x3, SCREEN_WIDTH
-		lsr x9, x3, 2
-		lsr x3, x3, 1
-		add x3, x3, x9
-		sub x3, x3, 20
-	mov x4, SCREEN_HEIGH
-		lsr x4, x4, 3
-	bl dibujar_rectangulo
-
-
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
 
-// DIBUJAR SATELITE 
+// ====== DIBUJAR PLANETA TIERRA ======
+// Parametros: x3 -> x | x4 ->y | x5 -> radio 
+// Aclaraciones: (x3, x4) son las coordenadas del centro del circulo
+
+draw_earth: 
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+
+	// Circulo grande general 
+	movz w10, 0x7DAA       // Carga los 16 bits menos significativos
+	movk w10, 0x22, lsl 16
+	bl pintar_circulo
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+// ====== FIN PLANETA TIERRA ======
+
+
+// ====== DIBUJAR SATELITE ======
+// Sin paraemtro por ahora, dibujado en el mismo lugar
 
 draw_satelite:
 	sub sp, sp, 8
 	stur x30, [sp, 0]
 	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
-	// Parametros: x3 = coordenada x del centro, x4 = coordenada y del centro, x5 = radio,  w10 = color
+
+	// Circulo para redondear parte izquierda
 	mov x3, 75
 	mov x4, 60 
 	mov x5, 10
+	bl pintar_circulo	// Ver si lo puedo pintar con el bucket del isma 
 
-	bl dibujar_circulo
-	// Parametros: x3 = x, x4 = y, ancho del rectangulo = x1, altura del rectangulo = x2, color = w10 
-	mov x3, 70 		// Coordenada x donde lo voy a pintar
-	mov x4,	50		// Coordenada y donde lo voy a pintar
-	mov x1, 40
-	mov x2, 20
+	// Circulo para redondear parte derecha
+	mov x3, 105
+	mov x4, 60 
+	mov x5, 10
+	bl pintar_circulo	// Ver si lo puedo pintar con el bucket del isma 	
 
+	// Pata de los paneles: 
+
+	// Pata 1: Arriba a la izquierda
+	mov x3, 80 		// Coordenada x donde lo voy a pintar
+	mov x4,	41		// Coordenada y donde lo voy a pintar
+	mov x1, 2
+	mov x2, 10
 	bl dibujar_rectangulo
+
+	// Pata 2: Arriba a la derecha
+	mov x3, 90 		// Coordenada x donde lo voy a pintar
+	mov x4,	41		// Coordenada y donde lo voy a pintar
+	mov x1, 2
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	// Pata 3: Abajo a la izquierda
+	mov x3, 80 		// Coordenada x donde lo voy a pintar
+	mov x4,	71		// Coordenada y donde lo voy a pintar
+	mov x1, 2
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	// Pata 4: Abajo a la derecha
+	mov x3, 90 		// Coordenada x donde lo voy a pintar
+	mov x4,	71		// Coordenada y donde lo voy a pintar
+	mov x1, 2
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	// Paneles:
+
+	// Panel de arriba
+	mov x3, 75 		// Coordenada x donde lo voy a pintar
+	mov x4,	31		// Coordenada y donde lo voy a pintar
+	mov x1, 22
+	mov x2, 15
+	bl dibujar_rectangulo
+
+	// Panel de abajo
+	mov x3, 75 		// Coordenada x donde lo voy a pintar
+	mov x4,	75		// Coordenada y donde lo voy a pintar
+	mov x1, 22
+	mov x2, 15
+	bl dibujar_rectangulo
+
+	// Circulito de la punta 
+	mov x3, 115
+	mov x4, 60 
+	mov x5, 4
+	bl pintar_circulo	// Ver si lo puedo pintar con el bucket del isma 	
+
+
+	// Rectangulos de la cola:
+
+	// Primer recntagulito (el largito)
+	mov x3, 63 		// Coordenada x donde lo voy a pintar
+	mov x4,	55		// Coordenada y donde lo voy a pintar
+	mov x1, 2		// Ancho
+	mov x2, 9		// Altura 
+	bl dibujar_rectangulo
+
+	// Segundo recntagulito (el cortito)
+	mov x3, 61 		// Coordenada x donde lo voy a pintar
+	mov x4,	57		// Coordenada y donde lo voy a pintar
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura 
+	bl dibujar_rectangulo
+
+	// Antena: 
+
+	// Circulo grande general
+	mov x3, 41
+	mov x4, 59 
+	mov x5, 20
+	bl pintar_circulo	// Ver si lo puedo pintar con el bucket del isma 	
+
+	// Recatngulo para tapar la parte del circulo y que quede un semicirculo
+	// Tener en cuenta si se cambia el color del fondo 
+	movz w10, 0x0f06, lsl 16
+	movk w10, 0x1b, lsl 00
+	mov x3, 17 		// Coordenada x donde lo voy a pintar
+	mov x4,	27		// Coordenada y donde lo voy a pintar
+	mov x1, 35		// Ancho
+	mov x2, 55		// Altura 
+	bl dibujar_rectangulo
+
+	// Rectangulo para terminar el semicirculo
+	mov w10, 0xFFFFFF
+	mov x3, 52 		// Coordenada x donde lo voy a pintar
+	mov x4,	42		// Coordenada y donde lo voy a pintar
+	mov x1, 1		// Ancho
+	mov x2, 35		// Altura 
+	bl dibujar_rectangulo
+
+	// Rectangulo para finalizar la cola de la antena
+	mov x3, 42 		// Coordenada x donde lo voy a pintar
+	mov x4,	58		// Coordenada y donde lo voy a pintar
+	mov x1, 10		// Ancho
+	mov x2, 3		// Altura 
+	bl dibujar_rectangulo
+
+	// Circulito pra terminar la cola
+	mov x3, 41
+	mov x4, 59 
+	mov x5, 3
+	bl pintar_circulo	// Ver si lo puedo pintar con el bucket del isma 
+
+	// Parametros del rectangulo obase del satelite 
+	mov x3, 70 		// Coordenada x donde lo voy a pintar
+	mov x4,	51		// Coordenada y donde lo voy a pintar
+	mov x1, 40		// Ancho
+	mov x2, 20		// Altura
+	bl dibujar_rectangulo
+
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
+// ====== FIN SATELITE ======
+
 
 
 

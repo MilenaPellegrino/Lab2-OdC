@@ -31,21 +31,20 @@ loop0:
 	sub x2,x2,1    // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
 	
-
-// Prametros x3 = x, x4 = y, w10 = color del pixel que vayamos a pintar 
-	mov x3, 0
-	mov x4, 0
+	// RECORDATORIOS: Tratar de ver porque dibujar_estrella no se pinta del color que quiero
+	// Parametros: x3 = x, x4 = y, w10 = color
+	// Tamano  estatico (por ahora)
+	mov x3, 300
+	mov x4, 300
 	mov w10, 0xFFFFFF
-	bl pintar_pixel
+	bl dibujar_estrella
 
-	// Parametros: x3 = x, x4 = y, ancho del rectangulo = x1, altura del rectangulo = x2, color = w10
-	mov x3, 185 		// Coordenada x donde lo voy a pintar
-	mov x4, 240		// Coordenada y donde lo voy a pintar
-	mov x1, 100
-	mov x2, 50
-	mov w10, 0xFFFFFF	//EL color del pixel que voy a pintar
 	bl draw_satelite
 
+	mov x3, 320
+	mov x4, 240
+	mov x5, 50
+	bl draw_earth
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
