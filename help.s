@@ -459,10 +459,7 @@ end_bridge:
 	ldur x30,[SP]			//|Devuelve a x30 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ret						//Termina la funcion
-<<<<<<< HEAD
 //Pone a x7,x8,x9 en 0
 
 // ========  FIN DE PINTAR PUENTECITOS  ======== 
-=======
 //
->>>>>>> 8a923674543fe46910d40676ff3eb0ef4959f2e2

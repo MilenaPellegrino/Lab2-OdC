@@ -30,59 +30,41 @@ loop0:
 
 	bl fondo_estrella
 	
-<<<<<<< HEAD
-	// RECORDATORIOS: Tratar de ver porque dibujar_estrella no se pinta del color que quiero
-
-=======
 	mov x3, 300
 	mov x4, 300
 	mov w10, 0xFFFFFF
->>>>>>> 8a923674543fe46910d40676ff3eb0ef4959f2e2
 	bl draw_satelite
 
 	mov x3, 320
 	mov x4, 240
 	mov x5, 150
-<<<<<<< HEAD
-	bl draw_earth 
-
-	//Dibuja saturno
-	movz x10,0xb6,lsl 16
-	movk x10,0x8355,lsl 00
-	bl dibujar_circulo
-	mov x3,320
-	mov x4,240
-	bl bucket
-	add x5,x3,150
-	sub x3,x3,150
-	movz x10,0xa7,lsl 16
-	movk x10,0x7c53,lsl 00
-	bl bridge
-	add x3,x3,3
-	sub x5,x5,3
-	sub x4,x4,30
-	bl bridge
-	sub SP,SP,8
-	stur x3,[SP]
-	mov x3,320
-	add x4,x4,30
-	bl bucket
-	ldur x3,[SP]
-	add SP,SP,8
-	add x4,x4,30
-	bl bridge
-	add x3,x3,10
-	sub x5,x5,10
-	sub x4,x4,90
-	bl bridge
-	add x4,x4,120
-	bl bridge
-	//Termina saturno
-=======
 	bl draw_saturn
->>>>>>> 8a923674543fe46910d40676ff3eb0ef4959f2e2
 
+
+	// Ejemplo de uso de gpios
+	mov x9, GPIO_BASE
+	// Atención: se utilizan registros w porque la documentación de broadcom
+	// indica que los registros que estamos leyendo y escribiendo son de 32 bits
+
+	// Setea gpios 0 - 9 como lectura
+	str wzr, [x9, GPIO_GPFSEL0]
+
+	// Lee el estado de los GPIO 0 - 31
+	ldr w10, [x9, GPIO_GPLEV0]
+
+	// And bit a bit mantiene el resultado del bit 2 en w10 (notar 0b... es binario)
+	// al inmediato se lo refiere como "máscara" en este caso:
+	// - Al hacer AND revela el estado del bit 2
+	// - Al hacer OR "setea" el bit 2 en 1
+	// - Al hacer AND con el complemento "limpia" el bit 2 (setea el bit 2 en 0)
+	and w11, w10, 0b00000010
+
+	// si w11 es 0 entonces el GPIO 1 estaba liberado
+	// de lo contrario será distinto de 0, (en este caso particular 2)
+	// significando que el GPIO 1 fue presionado
+
+	//---------------------------------------------------------------
+	// Infinite Loop
 
 InfLoop:
-    b InfLoop
-
+	b InfLoop

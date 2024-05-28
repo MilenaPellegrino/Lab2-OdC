@@ -2,13 +2,11 @@
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480	
 
-<<<<<<< HEAD
-
 // ====== DIBUJAR ESTRELLA TIPO 1 ======
-=======
 // Estrella de tipo 1 (cuadradito amarillo con cuadraditos en la punta)
 // Parametros: x2 = x, x1 = y
 // Tamano y color estaticos (por ahora)
+
 dibujar_estrella1: 
     sub SP, SP, 8   // Reservamos espacio en la pila 						
 	stur X30, [SP, 0]   // Guardamos el valor de x30 en la pila
@@ -21,6 +19,11 @@ dibujar_estrella1:
     //mov w10, 0xFFCF13   // Color amarillo para la estrella
     mov w10, 0xFFFFFF
     bl dibujar_rectangulo
+
+// ====== FIN DIBUJAR ESTRELLA TIPO 1 ======
+
+
+// ====== FONDO DE ESTRELLAS ======
 
 fondo_estrella:
     sub SP,SP,8     //reservamos espacio en la pila
@@ -172,6 +175,9 @@ fondo_estrella:
     add SP,SP,8
 ret
 
+// ====== FIN FONDO DE ESTRELLAS ======
+
+// ====== FILAS DE CIRCULOS ======
 fila_circulos:
     add x6,x3,0
     add x7,x4,0
@@ -193,7 +199,9 @@ fila_circulos:
     add SP,SP,8
 ret
 
+// ====== FIN FILAS DE CIRCULOS ======
 
+// ====== DIBUJAR SATURNO EPICOS TO CHETAO ======
 draw_saturn:
 	sub SP,SP,8
 	stur x30,[SP]
@@ -331,7 +339,6 @@ end_aux:
 	add SP,SP,8
 	ret
 // Estrella 
->>>>>>> 8a923674543fe46910d40676ff3eb0ef4959f2e2
 // Parametros: x3 = x, x4 = y, w10 = color
 // Tamano  estatico (por ahora) (hecha con dos triangulos)
 
@@ -351,7 +358,8 @@ dibujar_estrella:
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
-// ====== FIN DE DIBUJAR ESTRELLA TIPO 1 ======
+
+// ====== FIN DEL EPICO DIBUJO DE SATURNO ======
 
 
 // ====== DIBUJAR PLANETA TIERRA ======
@@ -472,8 +480,8 @@ draw_satelite:
 
 	// Recatngulo para tapar la parte del circulo y que quede un semicirculo
 	// Tener en cuenta si se cambia el color del fondo 
-	movz w10, 0x0f06, lsl 16
-	movk w10, 0x1b, lsl 00
+	movz w10, 0x0000, lsl 16
+	movk w10, 0x00, lsl 00
 	mov x3, 17 		// Coordenada x donde lo voy a pintar
 	mov x4,	27		// Coordenada y donde lo voy a pintar
 	mov x1, 35		// Ancho
