@@ -2,9 +2,10 @@
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480	
 
-// Estrella 
+
+// ====== DIBUJAR ESTRELLA TIPO 1 ======
 // Parametros: x3 = x, x4 = y, w10 = color
-// Tamano  estatico (por ahora)
+// Tamano  estatico (por ahora) (hecha con dos triangulos)
 
 dibujar_estrella: 
 	sub sp, sp, 8
@@ -22,6 +23,8 @@ dibujar_estrella:
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
+// ====== FIN DE DIBUJAR ESTRELLA TIPO 1 ======
+
 
 // ====== DIBUJAR PLANETA TIERRA ======
 // Parametros: x3 -> x | x4 ->y | x5 -> radio 

@@ -37,19 +37,14 @@ loop0:
 	mov x5, 150		// Radio de la circuns 
 	
 	// RECORDATORIOS: Tratar de ver porque dibujar_estrella no se pinta del color que quiero
-	// Parametros: x3 = x, x4 = y, w10 = color
-	// Tamano  estatico (por ahora)
-	mov x3, 300
-	mov x4, 300
-	mov w10, 0xFFFFFF
-	bl dibujar_estrella
 
 	bl draw_satelite
 
 	mov x3, 320
 	mov x4, 240
-	mov x5, 50
-	bl draw_earth
+	mov x5, 150
+	bl draw_earth 
+
 	//Dibuja saturno
 	movz x10,0xb6,lsl 16
 	movk x10,0x8355,lsl 00
@@ -81,7 +76,7 @@ loop0:
 	bl bridge
 	add x4,x4,120
 	bl bridge
-	//Termina saturno""
+	//Termina saturno
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
