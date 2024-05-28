@@ -329,8 +329,9 @@ bucket:
 	movz x9,0x0,lsl 00
 	bl dir_pixel  			//guardamos en x0 la direccion del pixel a pintar
 	ldur w5,[x0]   			//en x5 guardamos el color del pixel
-pixel_painter:
 	stur w10,[x0]
+pixel_painter:
+	movz x1,0x4,lsl 00
 	sub x0,x0,2560			//ponemos en x0 la dir del pixel superior
 	bl compare
 	add x0,x0,2556			//ponemos en x0 la dir del pixel anterior
@@ -344,29 +345,18 @@ pixel_painter:
 compare:
 	ldur w8,[x0]	 		//cargamos el color del pixel a comparar en w8
 	cmp w8,w5			//compara los colores de w8 con el color del primer pixel
-	sub x1,x9,1
-	lsl x1,x1,3
-	b.eq check_dir_SP 
+	b.eq dir_to_SP
 	ret
-check_dir_SP:
-	cbz x9,dir_to_sp
-	add SP,SP,x1
-	ldur x2,[SP]
-	cmp x0,x2
-	sub SP,SP,x1
-	b.eq ret
-	cbz x1,dir_to_sp
-	sub x1,x1,8
-	cbnz x1,check_dir_SP
-dir_to_sp:
-	sub SP,SP,8
-	stur x0,[SP,0]
+dir_to_SP:
+	stur w10,[x0]
+	sub SP,SP,4
+	stur w0,[SP,0]
 	add x9,x9,1
-ret:
 	ret
 next_dir:
-	ldur x0,[SP,0]
-	add SP,SP,8
+	movz x0,0x0,lsl 00
+	ldur w0,[SP,0]
+	add SP,SP,4
 	sub x9,x9,1
 	b pixel_painter
 end_bucket:
