@@ -1,4 +1,6 @@
 
+There are no discarded input sections
+
 Memory Configuration
 
 Name             Origin             Length             Attributes
@@ -12,58 +14,57 @@ LOAD help.o
 LOAD start.o
                 0x0000000000080000                . = 0x80000
 
-.text           0x0000000000080000    0x91244
+.text           0x0000000000080000    0x91690
  *(.text.boot)
  .text.boot     0x0000000000080000    0x100c8 start.o
                 0x0000000000080000                _start
  *(.text*)
- .text          0x00000000000900c8      0x700 app.o
-                0x00000000000906e0                main
- .text          0x00000000000907c8      0x618 drawings.o
- .text          0x0000000000090de0      0x464 help.o
- .text          0x0000000000091244    0x80000 start.o
+ .text          0x00000000000900c8      0x8c0 app.o
+                0x000000000009091c                main
+ .text          0x0000000000090988      0x854 drawings.o
+ .text          0x00000000000911dc      0x4b4 help.o
+ .text          0x0000000000091690    0x80000 start.o
 
-.iplt           0x0000000000111244        0x0
- .iplt          0x0000000000111244        0x0 start.o
+.iplt           0x0000000000111690        0x0
+ .iplt          0x0000000000111690        0x0 start.o
 
-.rela.dyn       0x0000000000111248        0x0
- .rela.iplt     0x0000000000111248        0x0 start.o
+.rela.dyn       0x0000000000111690        0x0
+ .rela.iplt     0x0000000000111690        0x0 start.o
  .rela.text.boot
-                0x0000000000111248        0x0 start.o
+                0x0000000000111690        0x0 start.o
 
-.data           0x0000000000111244        0x0
- .data          0x0000000000111244        0x0 app.o
- .data          0x0000000000111244        0x0 drawings.o
- .data          0x0000000000111244        0x0 help.o
- .data          0x0000000000111244        0x0 start.o
+.data           0x0000000000111690        0x0
+ .data          0x0000000000111690        0x0 app.o
+ .data          0x0000000000111690        0x0 drawings.o
+ .data          0x0000000000111690        0x0 help.o
+ .data          0x0000000000111690        0x0 start.o
 
-.igot.plt       0x0000000000111248        0x0
- .igot.plt      0x0000000000111248        0x0 start.o
+.igot.plt       0x0000000000111690        0x0
+ .igot.plt      0x0000000000111690        0x0 start.o
 
-.bss            0x0000000000111244        0x0
+.bss            0x0000000000111690        0x0
  *(.bss*)
- .bss           0x0000000000111244        0x0 app.o
- .bss           0x0000000000111244        0x0 drawings.o
- .bss           0x0000000000111244        0x0 help.o
- .bss           0x0000000000111244        0x0 start.o
+ .bss           0x0000000000111690        0x0 app.o
+ .bss           0x0000000000111690        0x0 drawings.o
+ .bss           0x0000000000111690        0x0 help.o
+ .bss           0x0000000000111690        0x0 start.o
 
-.bss            0x0000000000111244        0xc
-                0x0000000000111250                . = ALIGN (0x10)
- *fill*         0x0000000000111244        0xc 
-                0x0000000000111250                __bss_start = .
+.bss            0x0000000000111690        0x0
+                0x0000000000111690                . = ALIGN (0x10)
+                0x0000000000111690                __bss_start = .
  *(.bss .bss.*)
  *(COMMON)
-                0x0000000000111250                __bss_end = .
-                0x0000000000111250                _end = .
+                0x0000000000111690                __bss_end = .
+                0x0000000000111690                _end = .
                 0x0000000000000000                __bss_size = ((__bss_end - __bss_start) >> 0x3)
 OUTPUT(kernel8.elf elf64-littleaarch64)
 LOAD linker stubs
 
-.debug_line     0x0000000000000000      0x599
- .debug_line    0x0000000000000000      0x21e app.o
- .debug_line    0x000000000000021e      0x1d4 drawings.o
- .debug_line    0x00000000000003f2      0x154 help.o
- .debug_line    0x0000000000000546       0x53 start.o
+.debug_line     0x0000000000000000      0x6a0
+ .debug_line    0x0000000000000000      0x28b app.o
+ .debug_line    0x000000000000028b      0x260 drawings.o
+ .debug_line    0x00000000000004eb      0x165 help.o
+ .debug_line    0x0000000000000650       0x50 start.o
 
 .debug_info     0x0000000000000000       0xb8
  .debug_info    0x0000000000000000       0x2e app.o
@@ -87,9 +88,9 @@ LOAD linker stubs
  .debug_aranges
                 0x0000000000000090       0x30 start.o
 
-.debug_str      0x0000000000000000       0x42
- .debug_str     0x0000000000000000       0x3a app.o
- .debug_str     0x000000000000003a       0x3a drawings.o
- .debug_str     0x000000000000003a       0x3a help.o
- .debug_str     0x000000000000003a        0x8 start.o
-                                         0x3b (size before relaxing)
+.debug_str      0x0000000000000000       0x37
+ .debug_str     0x0000000000000000       0x37 app.o
+                                         0x2f (size before relaxing)
+ .debug_str     0x0000000000000037       0x2f drawings.o
+ .debug_str     0x0000000000000037       0x2f help.o
+ .debug_str     0x0000000000000037       0x30 start.o

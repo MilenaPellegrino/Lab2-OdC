@@ -187,7 +187,7 @@ draw_saturn:
 	sub SP,SP,8
 	stur x30,[SP]
 	add x11,x3,0
-	lsr x6,x5,2
+	lsr x6,x5,3
 	add x7,x4,0
 	add x8,x4,0
 	movz x10,0xb6,lsl 16
@@ -199,20 +199,44 @@ draw_saturn:
 	bl set_x3_x5
 	bl bridge
 	bl upper_bridge_and_bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
+	movz x10,0x99,lsl 16 
+	movk x10,0xcecc,lsl 00
 	bl upper_bridge_and_bucket
 	movz x10,0xec,lsl 16
 	movk x10,0x8735,lsl 00
 	bl upper_bridge_and_bucket
 	movz x10,0xff,lsl 16 
 	movk x10,0xd8ba,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0x51,lsl 16
+	movk x10,0x220c,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
 	bl lower_bridge_and_bucket
 	movz x10,0x33,lsl 16
 	movk x10,0x0000,lsl 00 
 	bl lower_bridge_and_bucket
 	movz x10,0xe0,lsl 16
 	movk x10,0xa06a,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl lower_bridge_and_bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
 	bl lower_bridge_and_bucket
 	b end_saturn
 upper_bridge_and_bucket:

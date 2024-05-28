@@ -42,46 +42,12 @@ loop0:
 	mov x3, 300
 	mov x4, 300
 	mov w10, 0xFFFFFF
-	bl dibujar_estrella
-
 	bl draw_satelite
 
 	mov x3, 320
 	mov x4, 240
-	mov x5, 50
-	bl draw_earth
-	//Dibuja saturno
-	movz x10,0xb6,lsl 16
-	movk x10,0x8355,lsl 00
-	bl dibujar_circulo
-	mov x3,320
-	mov x4,240
-	bl bucket
-	add x5,x3,150
-	sub x3,x3,150
-	movz x10,0xa7,lsl 16
-	movk x10,0x7c53,lsl 00
-	bl bridge
-	add x3,x3,3
-	sub x5,x5,3
-	sub x4,x4,30
-	bl bridge
-	sub SP,SP,8
-	stur x3,[SP]
-	mov x3,320
-	add x4,x4,30
-	bl bucket
-	ldur x3,[SP]
-	add SP,SP,8
-	add x4,x4,30
-	bl bridge
-	add x3,x3,10
-	sub x5,x5,10
-	sub x4,x4,90
-	bl bridge
-	add x4,x4,120
-	bl bridge
-	//Termina saturno""
+	mov x5, 150
+	bl draw_saturn
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
