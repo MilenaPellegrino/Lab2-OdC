@@ -7,7 +7,7 @@
 ///////		dato del color = w10 
 /////// 	anchos = x1, alturas = x2 
 
-// Calcular la direccion de un pixel
+// ========   CALCULAR LA DIRECCION DE UN PIXEL   ======== 
 // Parametros: x3 = x, x4 = y. Representan las coordenadas dle pixel que queremos calcular
 
 dir_pixel: 
@@ -18,8 +18,9 @@ dir_pixel:
     add x0, x0, x20     // Le sumamos la direccion base del framebuffer para obtener la direccion completa del pixel en memoria 
 ret
 
+// ========   FIN CALCULAR DIRECCION DE UN PIXEL  ======== 
 
-// Pintar un pixel por pantalla 
+// ========   PINTAR UN PIXEL EN LA PANTALLA  ======== 
 // Prametros x3 = x, x4 = y, w10 = color del pixel que vayamos a pintar 
 pintar_pixel: 
 
@@ -49,8 +50,9 @@ ret
 invalid_coordinates:
 ret   // Ver si hacer otra cosa al pasar una coordenada fuera de rango
 
+// ========   FIN DE PINTAR UN PIXEL EN LA PANTALLA  ======== 
 
-// Dibujar un rectangulo por pantalla 
+// ========   DIBUJAR RECTANGULO EN LA PANTALLA  ======== 
 // Parametros: x3 = x, x4 = y, ancho del rectangulo = x1, altura del rectangulo = x2, color = w10
 
 dibujar_rectangulo: 
@@ -77,7 +79,10 @@ dibujar_rectangulo:
 			cbnz x9, rectLoop	    // si no termine de pintar la ultima fila, vuelvo a pintar una fila
 ret
 
-// DIBUJAR FILA
+// ========   FIN DE DIBUJAR RECTANGULO EN LA PANTALLA  ======== 
+
+// ========   PINTAR UNA FILA EN LA PANTALLA  ======== 
+// VER PORQUE NO LO PINTA BIEN (no funciona el color)
 // PARAMETROS: x3 = x, x4 = y, X6 = tamano, w10 = color
 pintar_fila:
 	mov x16, x30
@@ -91,7 +96,9 @@ loop_fila:
 	sub x3, x3, x6    // Reseteo de la coordenada x
 	ret x16
 
-// DIBUJAR TRIANGULO TIPO 1
+// ========   FIN DE PINTAR UNA FILA EN LA PANTALLA  ======== 
+
+// ========   TRIANGULO TIPO 1  ======== 
 // PARAMETROS: x3 = x, x4 = y, (coordenadas del vertice superior) x1 = tamano, w10 = color
 // ACLRACIONES: La punta del triangulo esta abajo a al derecha
 
@@ -121,7 +128,10 @@ ldr X30, [SP, 0]
 add SP, SP, 8	
 ret
 
-// DIBUJAR TRIANGULO TIPO 2
+// ========   FIN TRIANGULO TIPO 1  ======== 
+
+
+// ========   TRIANGULO TIPO 2  ======== 
 // PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
 // ACLARACIONES: La punta del triangulo esta abajo a la izquierda
 
@@ -149,10 +159,9 @@ ldr X30, [SP, 0]
 add SP, SP, 8	
 ret
 
-// DIBUJAR UN TRIANGULO (usando los dos anteriores)
-// (completar) idea juntar los ods triangulo para hacer un triangulo con la punta para arriba 
+// ========   FIN TRIANGULO TIPO 2  ======== 
 
-// DIBUJAR TRIANGULO TIPO 3
+// ========   TRIANGULO TIPO 3  ======== 
 // PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
 // ACLARACION: La punta esta para arriba
 
@@ -180,9 +189,12 @@ loop_trian3:
     mov x1, x25
 	ret x17
 
-// DIBUJAR UN TRIANGULO TIPO 3.1 (INVERTIDO DEL TIPO 3)
+// ========   FIN TRIANGULO TIPO 3  ======== 
+
+
+// ========   TRIANGULO TIPO 3.1  ======== 
 // PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
-// ACLARACION: La punta esta para abajo
+// ACLARACION: La punta esta para abajo (invertido del tipo 3)
 
 dibujar_triangulo3_inv:
 	mov x17, x30
@@ -204,8 +216,9 @@ loop_trian3_inv:
     mov x1, x25 
 	ret x17
 
+// ========   FIN TRIANGULO TIPO 3.1  ======== 
 
-// DIBUJAR UN CIRCULO POR PANTALLA
+// ========   DIBUJAR CIRCULO POR LA PANTALLA  ======== 
 // Parametros: x3 = coordenada x del centro, x4 = coordenada y del centro, x5 = radio,  w10 = color
 // Aclaracion: Codigo ideado a traves de la idea del algoritmo de Bresenham
 dibujar_circulo:
@@ -305,8 +318,15 @@ ldr x30, [sp, 0]
 add sp, sp, 8
 ret  
 
+// ========   FIN DE DIBUJAR CIRCULO POR LA PANTALLA  ======== 
+
+
+// ========   PINTAR CIRCULO POR LA PANTALLA  ======== 
+// parametros x3= coordenada x del centro, x4 = coordenada y del centro,  x5 = radio, w10 = color
+// aclaraciones: ver porque no se pintar todo el circulo y quedan espacios
+
 pintar_circulo:
-//parametros x3= coordenada x del centro, x4 = coordenada y del centro,  x5 = radio, w10 = color
+
 	sub sp, sp, 8
 	stur x30, [sp, 0]
 		
@@ -324,6 +344,10 @@ pintar_circulo:
 	add sp, sp, 8
 	ret    
 
+// ========   FIN DE PINTAR CIRCULO POR LA PANTALLA  ======== 
+
+
+// ========   BUCKET PINTAR UN AREA DETERMINADA  ======== 
 //x3=coordenada x, x4=coordenada y x10=color a pintar
 //x25==0 bucket normal x25!=0 bucket hasta color!
 bucket: 
@@ -404,9 +428,11 @@ end_bucket:
 	ret						//Termina la funcion
 //
 
+// ========   FIN DEL BUCKET PINTAR UN AREA DETERMINADA  ======== 
 
-//x3=xa, x4=y, x5=xb, w10=color a pintar
-//xb debe ser mayor a xa (xb>xa) y la distancia entre el xa y xb debe ser mayor a 2
+// ========   PINTAR PUENTECITOS  ======== 
+// Parametros: x3=xa, x4=y, x5=xb, w10=color a pintar
+// Aclaraciones: xb debe ser mayor a xa (xb>xa) y la distancia entre el xa y xb debe ser mayor a 2
 bridge:
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x30
 	stur x30,[SP] 			//|Almaceno x30
@@ -460,4 +486,6 @@ end_bridge:
 	ldur x30,[SP]			//|Devuelve a x30 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ret						//Termina la funcion
+
+// ========  FIN DE PINTAR PUENTECITOS  ======== 
 //
