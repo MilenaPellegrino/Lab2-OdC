@@ -361,7 +361,8 @@ pintar_circulo:
 
 
 // ========   BUCKET PINTAR UN AREA DETERMINADA  ======== 
-// Parametros: x3=coordenada x, x4=coordenada y, x10=color a pintar
+//x3=coordenada x, x4=coordenada y x10=color a pintar
+//x25==0 bucket normal x25!=0 bucket hasta color!
 bucket: 
 	sub SP,SP,8  		  	//Reservamos espacio en la pila
 	stur x30,[SP,0]       	//Guardamos el valor de x30 en la pila	
@@ -373,23 +374,49 @@ bucket:
 	stur x9,[SP,0]       	//Guardamos el valor de x9 en la pila
 	movz x9,0x0,lsl 00		//Usamos x9 para llevar registro de cuanta SP es usada, lo inicializo en 0
 	bl dir_pixel  			//guardamos en x0 la direccion del pixel a pintar
-	ldur w7,[x0]   			//en x7 guardamos el color del pixel
+	add x30,x30,12
+	cbz x25,normal_bucket
+	cbnz x25,modified_bucket
 	stur w10,[x0]			//Pinto el primer pixel
+	b pixel_painter
+normal_bucket:
+	ldur w7,[x0]   			//en x7 guardamos el color del pixel
+	ret
+modified_bucket:
+	add w7,w10,0
+	ret
 pixel_painter:
 	sub x0,x0,2560			//ponemos en x0 la dir del pixel superior
-	bl compare				//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	bl 4
+	add x30,x30,12
+	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	cbnz x25,modified_compare
 	add x0,x0,2556			//ponemos en x0 la dir del pixel anterior
-	bl compare				//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	bl 4
+	add x30,x30,12
+	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	cbnz x25,modified_compare
 	add x0,x0,8				//ponemos en x0 la dir del pixel posterior
-	bl compare				//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	bl 4
+	add x30,x30,12
+	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	cbnz x25,modified_compare
 	add x0,x0,2556			//ponemos en x0 la dir del pixel inferior
-	bl compare				//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	bl 4
+	add x30,x30,12
+	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	cbnz x25,modified_compare
 	cbz x9,end_bucket		//Si ya se libero la SP, termino el programa
 	cbnz x9,next_dir		//Si no esta liberada la SP,busco el sig pixel almacenado en SP
 compare:
 	ldur w8,[x0]	 		//cargamos el color del pixel a comparar en w8
 	cmp w8,w7				//compara el color de w8 con el color que desea ser reemplazado
 	b.eq dir_to_SP			//Si estos colores son iguales lo pinta y almacena su direccion en SP
+	ret
+modified_compare:
+	ldur w8,[x0]
+	cmp w8,w7
+	b.ne dir_to_SP
 	ret
 dir_to_SP:
 	stur w10,[x0]			//Pinta el pixel
@@ -471,7 +498,6 @@ end_bridge:
 	ldur x30,[SP]			//|Devuelve a x30 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ret						//Termina la funcion
-//Pone a x7,x8,x9 en 0
 
 // ========  FIN DE PINTAR PUENTECITOS  ======== 
 
