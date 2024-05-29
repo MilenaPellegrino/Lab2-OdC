@@ -10,6 +10,7 @@
 
 .globl main
 
+// Funcion normal 
 main:
     // x0 contiene la direccion base del framebuffer
     mov x20, x0 // Guarda la dirección base del framebuffer en x20
@@ -29,42 +30,71 @@ loop0:
 	cbnz x2,loop1  // Si no es la última fila, salto
 
 	bl fondo_estrella
-	
+
 	mov x3, 300
 	mov x4, 300
 	mov w10, 0xFFFFFF
 	bl draw_satelite
+
+// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
+
+	mov x3, 100
+	mov x4, 100
+	mov x1, 50
+	mov w10, 0xFFFFFF
+
 
 	mov x3, 320
 	mov x4, 240
 	mov x5, 150
 	bl draw_saturn
 
+	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
+	//Guardamos en x9 la direccion base del GPIO 
+	mov x9, GPIO_BASE	// La direccion base es diferente al del manual se debe a que es emulada
+	
+	// Cargamos en x12 un valor relativamente grande para poder ver la otra escena por pantalla
+	ldr x12, = 0x700000
 
-	// Ejemplo de uso de gpios
-	mov x9, GPIO_BASE
-	// Atención: se utilizan registros w porque la documentación de broadcom
-	// indica que los registros que estamos leyendo y escribiendo son de 32 bits
-
-	// Setea gpios 0 - 9 como lectura
-	str wzr, [x9, GPIO_GPFSEL0]
-
-	// Lee el estado de los GPIO 0 - 31
-	ldr w10, [x9, GPIO_GPLEV0]
-
-	// And bit a bit mantiene el resultado del bit 2 en w10 (notar 0b... es binario)
-	// al inmediato se lo refiere como "máscara" en este caso:
-	// - Al hacer AND revela el estado del bit 2
-	// - Al hacer OR "setea" el bit 2 en 1
-	// - Al hacer AND con el complemento "limpia" el bit 2 (setea el bit 2 en 0)
-	and w11, w10, 0b00000010
-
-	// si w11 es 0 entonces el GPIO 1 estaba liberado
-	// de lo contrario será distinto de 0, (en este caso particular 2)
-	// significando que el GPIO 1 fue presionado
-
-	//---------------------------------------------------------------
-	// Infinite Loop
 
 InfLoop:
+
+	// Leemos el estado del 0-31 y lo almacenamos en w14. 
+	// Recordemos que x9 tiene la direccion base del GPIO
+	/*
+	GPIO_GPLEV0 almacena un bit por cada GPIO que se desea leer.
+	Cada bit en el registro refleja el estado actual del GPIO correspondiente:
+    	- 0 (bajo): Indica que el GPIO está en un nivel bajo (pulsador liberado).
+    	- 1 (alto): Indica que el GPIO está en un nivel alto (pulsador presionado).
+	 */
+	ldr w14, [x9, GPIO_GPLEV0]	
+
+#0B2239
+    movz x10, 0x0B, lsl 16
+	movk x10, 0x2239, lsl 00 // color del fondo
+	// Extraccion del estado del bit 2 de w14 y lo guardamos en w11
+	and w11, w14, 0b00000010 // Usamos la mascara binaria 
+
+	/*
+	Si el bit 2 de w14 ahora guardado en w11 está en alto (1), 
+	signfica que se presiono el pulsador, entonces saltamos a la siguiente escena 
+	en este caso, chau saturno hola luna
+	*/
+	cbnz w11, moon	
+
+	// contador
+	mov x13, #0   // Establecemos todos los bits del registro x13 en 0 
+
+	// while(x13 != x12) ...
+	// x13 = 0, x12 = 0x700000
+	// sumamos de a 1 a x13 jajsjsa, asi qeu tenemos para rato
+
+	delay:
+		add x13, x13, #1
+		cmp x13, x12
+		b.ne delay
+	b InfLoop
+
+moon:
+// escribir codigo 
 	b InfLoop

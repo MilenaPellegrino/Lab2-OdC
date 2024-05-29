@@ -85,16 +85,19 @@ ret
 // VER PORQUE NO LO PINTA BIEN (no funciona el color)
 // PARAMETROS: x3 = x, x4 = y, X6 = tamano, w10 = color
 pintar_fila:
-	mov x16, x30
-	mov x10, x6		   // x10 = contador = tamano 
+    sub SP, SP, 8
+    stur X30, [SP, 0]
+    mov x11, x6        // x10 = contador = tamano
 loop_fila:
-	bl pintar_pixel    // Pintamos el pixel
-	add x3, x3, 1     // Avanzamos al siguiente
-	sub x10, x10, 1   // Restamos al contador
-	cmp xzr, x10      // Comparamos el contador ocn 0
-	b.lt loop_fila      // si es menor o igual que 0 terminamos
-	sub x3, x3, x6    // Reseteo de la coordenada x
-	ret x16
+    bl pintar_pixel    // Pintamos el pixel
+    add x3, x3, 1     // Avanzamos al siguiente
+    sub x11, x11, 1   // Restamos al contador
+    cbnz x11, loop_fila // mientras el contador no sea 0 loopeamos
+
+ldr X30, [SP, 0]
+add SP, SP, 8
+ret
+
 
 // ========   FIN DE PINTAR UNA FILA EN LA PANTALLA  ======== 
 
@@ -103,27 +106,26 @@ loop_fila:
 // ACLRACIONES: La punta del triangulo esta abajo a al derecha
 
 dibujar_triangulo1:
-sub SP, SP, 8 					
+sub SP, SP, 8 						
 stur X30, [SP, 0]
 
-	mov x9, x1		// Guardamos en x9 el tamano del triangulo
-	mov x13, x3		// Guardamos en x13 la posicion inicial de x
+	mov x9, x1
+	mov x13, x3
+	triangleLoop1:
+		mov x3, x13				//guardo en x13 la coordenada x del primer pixel de la fila
+		mov x11, x1
+			add x11, x11, 1
+		sub x11, x11, x9
 
-	loop_trian1:
-		mov x3, x13				// En x3 reseteo a la posicion inicial del triangulo para cada nueva fila
-		mov x11, x1				// guardo el tamano
-		add x11, x11, 1			
-		sub x11, x11, x9		// Decrementamos en 1 para ir haciendo cada fila del triangulo
-
-		pintar_trian1:
+		printTriangle1:
 			bl pintar_pixel
-			add x3, x3, 1			//sumo 1 en x
-			sub x11, x11, 1			//resto 1 a x11 qye es el largo de la fila
-			cbnz x11, pintar_trian1 // si no llegue al final de la fila  pinto otro pixel
+			add x3, x3, 1			//sumo 1 a la coord x
+			sub x11, x11, 1			//resto el contador de largo de fila
+			cbnz x11, printTriangle1 // si no llegue al final de la fila, pinto otro pixel
 			sub x13, x13, 1         // le resto 1 a la coordenada x del primer pixel de la fila almacenada en x13
-			add x4, x4, 1			// sumo 1 a la coord y
-			sub x9, x9, 1           // resto el contador de altura
-			cbnz x9, loop_trian1 // si no llegue a la ultima fila, repito
+			add x4, x4, 1			//sumo 1 a la coord y
+			sub x9, x9, 1           //resto el contador de altura
+			cbnz x9, triangleLoop1 // si no llegue a la ultima fila, repito
 ldr X30, [SP, 0]					 			
 add SP, SP, 8	
 ret
@@ -141,20 +143,20 @@ stur X30, [SP, 0]
 
 	mov x9, x1
 	mov x13, x3
-	loop_trian2:
+	triangleLoop2:
 		mov x3, x13				//guardo en x13 la coordenada x del primer pixel de la fila
 		mov x11, x1
 			add x11, x11, 1
 		sub x11, x11, x9
 
-		pintar_trian2:
+		printTriangle2:
 			bl pintar_pixel
-			add x3, x3, 1	
-			sub x11, x11, 1	
-			cbnz x11, pintar_trian2
-			add x4, x4, 1			
-			sub x9, x9, 1     
-			cbnz x9, loop_trian2
+			add x3, x3, 1			//sumo 1 a la coord x
+			sub x11, x11, 1			//resto el contador de largo de fila
+			cbnz x11, printTriangle2 // si no llegue al final de la fila, pinto otro pixel
+			add x4, x4, 1			//sumo 1 a la coord y
+			sub x9, x9, 1           //resto el contador de altura
+			cbnz x9, triangleLoop2 // si no llegue a la ultima fila, repito
 ldr X30, [SP, 0]					 			
 add SP, SP, 8	
 ret
@@ -166,26 +168,28 @@ ret
 // ACLARACION: La punta esta para arriba
 
 dibujar_triangulo3:
+	// Paints a triangle given a (x,y) coords (x2, x1) a height (x5) and a color (x3)
 	mov x17, x30
-    mov x24, x6
+    mov x24, x7
     mov x25, x1
-    mov x22, x3
+    mov w22, w10
     mov x21, x4
-	mov x6, 1  //  x4 = x22 x1 = x23
+	mov x7, 1  //  x7 = x22 x1 = x23
 	bl pintar_pixel
-loop_trian3:
-	bl pintar_fila  // pintamos toda la fila
+loopT:
+	bl pintar_fila  // Paint row 
 	add x4, x4, 1  
 	bl pintar_fila
 
-	add x4, x4, 1  
-	sub x3, x3, 1  // Pasamos a la siguiente fila
-	add x6, x6, 2  
+	add x8, x8, 1  
+	sub x4, x4, 1  // Next row
 
-	sub x1, x1, 1  // Restamos uno al tamano
-	cmp xzr, x1    //  Si el tamano es menor que 0 terminamos
-	b.lt loop_trian3  
-    mov x6, x24
+	add x7, x7, 2  // Increment row size
+
+	sub x1, x1, 1  // Decrement height counter
+	cmp xzr, x1    // Compare with 0
+	b.lt loopT     // If bigger than 0 repeat, else continue
+    mov x7, x24
     mov x1, x25
 	ret x17
 
@@ -196,26 +200,35 @@ loop_trian3:
 // PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
 // ACLARACION: La punta esta para abajo (invertido del tipo 3)
 
-dibujar_triangulo3_inv:
-	mov x17, x30
-    mov x24, x6 //guardar x6 y x1 para devolverselo al final
-    mov x25, x1
-	mov x6, 1
-	bl pintar_pixel
-loop_trian3_inv:
-	bl pintar_fila 
-	sub x4, x4, 1  
-	bl pintar_fila
-	sub x4, x4, 1  
-	sub x3, x3, 1  
-	add x6, x6, 2  
-	sub x1, x1, 1  
-	cmp xzr, x1   
-	b.lt loop_trian3_inv     
-    mov x6, x24
-    mov x1, x25 
-	ret x17
+// PARAMETROS: x3 = x (coordenada inicial x), x4 = y (coordenada inicial y), x5 = tamano, w10 = color
+/*dibujar_triangulo3_inv:
+ dibujar_triangulo3_inv:
+    sub SP, SP, 16        // Reservar espacio en la pila
+    stp X29, X30, [SP, 8] // Guardar los registros X29 y X30 en la pila
+    mov X29, SP           // Frame pointer
 
+    mov x24, x1           // Guardar el tamaño del triángulo
+    mov x22, x3           // Guardar coordenada x inicial
+    mov x21, x4           // Guardar coordenada y inicial
+
+    mov x6, x1            // Inicializar ancho del triángulo igual al tamaño
+    mov x2, 1             // Altura inicial del triángulo (1 pixel de alto por fila)
+
+loop_trian3_inv:
+    // Parametros: x3 = x, x4 = y, x6 = ancho de la fila, w10 = color
+    bl pintar_fila         // Pintar la fila actual
+    add x4, x4, 1          // Mover a la siguiente fila (incrementar y)
+    sub x3, x3, 1          // Ajustar coordenada x para la nueva fila (mover a la izquierda)
+    sub x6, x6, 2          // Reducir el ancho de la fila
+
+    subs x1, x1, 1         // Decrementar el tamaño
+    bne loop_trian3_inv    // Si el tamaño no es 0, repetir el bucle
+
+    ldp X29, X30, [SP, 8]  // Restaurar los registros X29 y X30
+    add SP, SP, 16         // Liberar espacio en la pila
+    ret
+
+*/
 // ========   FIN TRIANGULO TIPO 3.1  ======== 
 
 // ========   DIBUJAR CIRCULO POR LA PANTALLA  ======== 
@@ -400,7 +413,6 @@ end_bucket:
 	add SP,SP,8				//Libera espacio del SP
 	ret						//Termina la funcion
 //
-
 // ========   FIN DEL BUCKET PINTAR UN AREA DETERMINADA  ======== 
 
 // ========   PINTAR PUENTECITOS  ======== 
@@ -462,4 +474,4 @@ end_bridge:
 //Pone a x7,x8,x9 en 0
 
 // ========  FIN DE PINTAR PUENTECITOS  ======== 
-//
+
