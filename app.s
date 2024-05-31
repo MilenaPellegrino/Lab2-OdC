@@ -15,8 +15,8 @@ main:
     // x0 contiene la direccion base del framebuffer
     mov x20, x0 // Guarda la dirección base del framebuffer en x20
 
-    movz x10, 0x0000, lsl 16
-    movk x10, 0x0000, lsl 00
+    movz x10, 0xFFFF, lsl 16
+    movk x10, 0xFFFF, lsl 00
 
     mov x2, SCREEN_HEIGHT         // Y Size
 loop1:
@@ -29,6 +29,7 @@ loop0:
 	sub x2,x2,1    // Decrementar contador Y
 	cbnz x2,loop1  // Si no es la última fila, salto
 
+	bl fondo_degrade
 	bl fondo_estrella
 
 	mov x3, 300

@@ -543,3 +543,137 @@ add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
 
+// ====== FONDO DEGRADE FACHERO =======//
+
+fondo_degrade:
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+
+	movz w10, 0x0000
+	movk w10, 0x00, lsl 16
+	mov x3, 0		// Coordenada x donde lo voy a pintar
+	mov x4, 0		// Coordenada y donde lo voy a pintar
+	mov x1, 640		// Ancho
+	mov x2, 280		// Altura
+rectangulo_negro:
+	bl dibujar_rectangulo
+	sub x2, x2, 1
+	cbnz x2, rectangulo_negro
+
+	movz w10, 0x02     
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 280
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+
+
+	movz w10, 0x03      
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 300
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+//
+//
+	movz w10, 0x04      
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 320
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+//
+	movz w10, 0x5      
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 340
+	mov x1, 640
+	mov x2, 10
+	bl dibujar_rectangulo
+//
+	movz w10, 0x6    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 350
+	mov x1, 640
+	mov x2, 10
+	bl dibujar_rectangulo
+//
+	movz w10, 0x7    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 360
+	mov x1, 640
+	mov x2, 10
+	bl dibujar_rectangulo
+//
+	movz w10, 0x9    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 370
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+
+	movz w10, 0x12    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 390
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+
+	movz w10, 0x15    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 410
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+
+	movz w10, 0x17    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 430
+	mov x1, 640
+	mov x2, 20
+	bl dibujar_rectangulo
+
+	movz w10, 0x19    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 450
+	mov x1, 640
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	movz w10, 0x21    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 460
+	mov x1, 640
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	movz w10, 0x23    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 470
+	mov x1, 640
+	mov x2, 5
+	bl dibujar_rectangulo
+
+	movz w10, 0x24    
+	movk w10, 0x00, lsl 16
+	mov x3, 0
+	mov x4, 475
+	mov x1, 640
+	mov x2, 5
+	bl dibujar_rectangulo
+	ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+
