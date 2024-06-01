@@ -336,27 +336,26 @@ ret
 
 // ========   PINTAR CIRCULO POR LA PANTALLA  ======== 
 // parametros x3= coordenada x del centro, x4 = coordenada y del centro,  x5 = radio, w10 = color
-// aclaraciones: ver porque no se pintar todo el circulo y quedan espacios
 
 pintar_circulo:
 
 	sub sp, sp, 8
 	stur x30, [sp, 0]
 		
-	mov x23, x3  // Guardar coordenada x del centro
-	mov x24, x4  // Guardar coordenada y del centro
-		
-	circleloop:
+	mov x7, x3  // Guardar coordenada x del centro
+	mov x8, x4  // Guardar coordenada y del centro
+
+	// La idea es ir pintando circulos con radios mas chicos hasta llegar al del radio 0.
+
+	loop_pintar:
 		bl dibujar_circulo  // Llama a la función para dibujar el círculo
-		mov x3, x23         // Restaurar coordenada x del centro
-		mov x4, x24         // Restaurar coordenada y del centro
+		mov x3, x7         // Restaurar coordenada x del centro
+		mov x4, x8         // Restaurar coordenada y del centro
 		sub x5, x5, 1       // Decrementar radio
-		cbnz x5, circleloop // Si el radio no es cero, repetir el bucle
-		
+		cbnz x5, loop_pintar // Si el radio no es cero, repetir el bucle
 	ldr x30, [sp, 0]
 	add sp, sp, 8
 	ret    
-
 // ========   FIN DE PINTAR CIRCULO POR LA PANTALLA  ======== 
 
 

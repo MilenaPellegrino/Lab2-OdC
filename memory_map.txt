@@ -12,58 +12,57 @@ LOAD help.o
 LOAD start.o
                 0x0000000000080000                . = 0x80000
 
-.text           0x0000000000080000    0x91cc4
+.text           0x0000000000080000    0x91d30
  *(.text.boot)
  .text.boot     0x0000000000080000    0x100c8 start.o
                 0x0000000000080000                _start
  *(.text*)
- .text          0x00000000000900c8      0xbf8 app.o
-                0x0000000000090bfc                main
- .text          0x0000000000090cc0      0xb34 drawings.o
- .text          0x00000000000917f4      0x4d0 help.o
- .text          0x0000000000091cc4    0x80000 start.o
+ .text          0x00000000000900c8      0xc30 app.o
+                0x0000000000090c30                main
+ .text          0x0000000000090cf8      0xb68 drawings.o
+ .text          0x0000000000091860      0x4d0 help.o
+ .text          0x0000000000091d30    0x80000 start.o
 
-.iplt           0x0000000000111cc4        0x0
- .iplt          0x0000000000111cc4        0x0 start.o
+.iplt           0x0000000000111d30        0x0
+ .iplt          0x0000000000111d30        0x0 start.o
 
-.rela.dyn       0x0000000000111cc8        0x0
- .rela.iplt     0x0000000000111cc8        0x0 start.o
+.rela.dyn       0x0000000000111d30        0x0
+ .rela.iplt     0x0000000000111d30        0x0 start.o
  .rela.text.boot
-                0x0000000000111cc8        0x0 start.o
+                0x0000000000111d30        0x0 start.o
 
-.data           0x0000000000111cc4        0x0
- .data          0x0000000000111cc4        0x0 app.o
- .data          0x0000000000111cc4        0x0 drawings.o
- .data          0x0000000000111cc4        0x0 help.o
- .data          0x0000000000111cc4        0x0 start.o
+.data           0x0000000000111d30        0x0
+ .data          0x0000000000111d30        0x0 app.o
+ .data          0x0000000000111d30        0x0 drawings.o
+ .data          0x0000000000111d30        0x0 help.o
+ .data          0x0000000000111d30        0x0 start.o
 
-.igot.plt       0x0000000000111cc8        0x0
- .igot.plt      0x0000000000111cc8        0x0 start.o
+.igot.plt       0x0000000000111d30        0x0
+ .igot.plt      0x0000000000111d30        0x0 start.o
 
-.bss            0x0000000000111cc4        0x0
+.bss            0x0000000000111d30        0x0
  *(.bss*)
- .bss           0x0000000000111cc4        0x0 app.o
- .bss           0x0000000000111cc4        0x0 drawings.o
- .bss           0x0000000000111cc4        0x0 help.o
- .bss           0x0000000000111cc4        0x0 start.o
+ .bss           0x0000000000111d30        0x0 app.o
+ .bss           0x0000000000111d30        0x0 drawings.o
+ .bss           0x0000000000111d30        0x0 help.o
+ .bss           0x0000000000111d30        0x0 start.o
 
-.bss            0x0000000000111cc4        0xc
-                0x0000000000111cd0                . = ALIGN (0x10)
- *fill*         0x0000000000111cc4        0xc 
-                0x0000000000111cd0                __bss_start = .
+.bss            0x0000000000111d30        0x0
+                0x0000000000111d30                . = ALIGN (0x10)
+                0x0000000000111d30                __bss_start = .
  *(.bss .bss.*)
  *(COMMON)
-                0x0000000000111cd0                __bss_end = .
-                0x0000000000111cd0                _end = .
+                0x0000000000111d30                __bss_end = .
+                0x0000000000111d30                _end = .
                 0x0000000000000000                __bss_size = ((__bss_end - __bss_start) >> 0x3)
 OUTPUT(kernel8.elf elf64-littleaarch64)
 LOAD linker stubs
 
-.debug_line     0x0000000000000000      0x85a
- .debug_line    0x0000000000000000      0x365 app.o
- .debug_line    0x0000000000000365      0x327 drawings.o
- .debug_line    0x000000000000068c      0x17b help.o
- .debug_line    0x0000000000000807       0x53 start.o
+.debug_line     0x0000000000000000      0x86f
+ .debug_line    0x0000000000000000      0x371 app.o
+ .debug_line    0x0000000000000371      0x332 drawings.o
+ .debug_line    0x00000000000006a3      0x179 help.o
+ .debug_line    0x000000000000081c       0x53 start.o
 
 .debug_info     0x0000000000000000       0xb8
  .debug_info    0x0000000000000000       0x2e app.o

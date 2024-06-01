@@ -2,29 +2,54 @@
 .equ SCREEN_WIDTH, 		640
 .equ SCREEN_HEIGH, 		480	
 
-// ====== DIBUJAR ESTRELLA TIPO 1 ======
-// Estrella de tipo 1 (cuadradito amarillo con cuadraditos en la punta)
-// Parametros: x2 = x, x1 = y
-// Tamano y color estaticos (por ahora)
 
-dibujar_estrella1: 
-    sub SP, SP, 8   // Reservamos espacio en la pila 						
-	stur X30, [SP, 0]   // Guardamos el valor de x30 en la pila
+// ====== FONDO DEGRADE FACHERO =======//
 
-    // Dibujo el cuadrado principal:
-    mov x3, x2  // Posicion x del centro de la estrella
-    mov x4, x1  // Poscion y del centro de la estrella 
-    mov x1, 3  // Ancho del centro de la estrella = 10
-    mov x2, 3  // Altura del centro de la estrella = 10
-    //mov w10, 0xFFCF13   // Color amarillo para la estrella
-    mov w10, 0xFFFFFF
-    bl dibujar_rectangulo
+fondo_degrade:
+	sub sp, sp, 8
+	stur x30, [sp, 0]
 
-// ====== FIN DIBUJAR ESTRELLA TIPO 1 ======
+	movz w10, 0x0000        // Inicializar el color a negro (0x00000000)
+	mov x3, 0		        // Coordenada x donde lo voy a pintar
+	mov x4, 0		        // Coordenada y donde lo voy a pintar
+	mov x1, 640		        // Ancho
+	mov x2, 1		        // Altura
+	mov x6, 0x0000	    // Blanco máximo (0xFFFFFFFF)
+	udiv x7, x6, x2	        // Incremento por fila (blanco / altura)
+
+rectangulo_negro:
+	bl dibujar_rectangulo
+	add w10, w10, w7
+	add x4, x4, 1        // Incrementa el color para el siguiente degradado
+	add x2, x2, 1
+	cmp x2, 280
+	b.lt rectangulo_negro
+
+
+	movz w10, 0x0000        // Inicializar el color a negro (0x00000000)
+	mov x3, 0		        // Coordenada x donde lo voy a pintar
+	mov x4, 280		        // Coordenada y donde lo voy a pintar
+	mov x1, 640		        // Ancho
+	mov x2, 1		        // Altura
+	mov x6, 0x0001	    // Blanco máximo (0xFFFFFFFF)
+	udiv x7, x6, x2	        // Incremento por fila (blanco / altura)
+
+rectangulo_azul:
+	bl dibujar_rectangulo
+	add w10, w10, w7
+	add x4, x4, 6        // Incrementa el color para el siguiente degradado
+	add x2, x2, 1
+	cmp x2, 200
+	b.lt rectangulo_azul
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+
+// ====== FIN FONDO DEGRADE FACHERO ======
 
 
 // ====== FONDO DE ESTRELLAS ======
-
 fondo_estrella:
     sub SP,SP,8     //reservamos espacio en la pila
     stur x30,[SP]	// guardamos el valor de x3 en la pila
@@ -339,22 +364,8 @@ end_aux:
 
 // ====== FIN DEL EPICO DIBUJO DE SATURNO ======
 
-// Funcion  hasta que este la del aguas 
-background:
-//parametros: w10 = color del fondo
-    sub sp, sp, 8
-    stur x30, [sp, 0]
-    mov x1, SCREEN_WIDTH     //todo el ancho de la pantalla
-    mov x2, SCREEN_HEIGH    //toda la altura de la pantalla
-    mov x3, 0               
-    mov x4, 0               //coordenada 0,0
-    bl dibujar_rectangulo
-    ldr x30, [sp, 0]
-    add sp, sp, 8
-ret
-
 // ====== DIBUJAR """la luna""" (con muchas comillas)======
-// No la pude parametrizar 
+// Con el n uevo fondo hay circulos que no se pintan bien
 // CORREGIR Y HACERLA MAS FACHERA
 
 draw_moon: 
@@ -553,4 +564,5 @@ ldr x30, [sp, 0]
 add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
+
 
