@@ -339,8 +339,19 @@ end_aux:
 
 // ====== FIN DEL EPICO DIBUJO DE SATURNO ======
 
-
-
+// Funcion  hasta que este la del aguas 
+background:
+//parametros: w10 = color del fondo
+    sub sp, sp, 8
+    stur x30, [sp, 0]
+    mov x1, SCREEN_WIDTH     //todo el ancho de la pantalla
+    mov x2, SCREEN_HEIGH    //toda la altura de la pantalla
+    mov x3, 0               
+    mov x4, 0               //coordenada 0,0
+    bl dibujar_rectangulo
+    ldr x30, [sp, 0]
+    add sp, sp, 8
+ret
 
 // ====== DIBUJAR """la luna""" (con muchas comillas)======
 // No la pude parametrizar 
@@ -353,11 +364,11 @@ draw_moon:
 	mov x4, 240
 	mov x5, 150
 
-	// Circulo grande general 
-	movz w10, 0xBBBB       // Carga los 16 bits menos significativos
+	// Circulo gris para hacer como una sombra
+	movz w10, 0xBBB3
 	movk w10, 0xBB, lsl 16
 	bl dibujar_circulo
-	bl bucket
+	bl bucket	
 
 	mov x3, 270
 	mov x4, 170

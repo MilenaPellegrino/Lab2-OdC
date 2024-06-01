@@ -31,18 +31,11 @@ loop0:
 
 	bl fondo_estrella
 
-	mov x3, 300
-	mov x4, 300
-	mov w10, 0xFFFFFF
-	bl draw_satelite
-
-// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
-
 	mov x3, 100
 	mov x4, 100
 	mov x1, 50
 	mov w10, 0xFFFFFF
-
+	
 
 	mov x3, 320
 	mov x4, 240
@@ -96,5 +89,20 @@ InfLoop:
 	b InfLoop
 
 moon:
-// escribir codigo 
+	mov x0, x20
+	movz w10, 0x29, lsl 16
+	movk w10, 0x2936, lsl 00 //color del fondo
+
+	bl background	// Despues usar la funcion del agus 
+	bl fondo_estrella
+	mov x3, 320
+	mov x4, 240
+	mov x5, 150
+	bl draw_moon
+
+	mov x3, 300
+	mov x4, 300
+	mov w10, 0xFFFFFF
+	bl draw_satelite	// MOdificar la funcon para que el color del fondo sea igual que el color del fondp
+
 	b InfLoop
