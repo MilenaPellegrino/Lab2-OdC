@@ -87,13 +87,20 @@ ret
 pintar_fila:
     sub SP, SP, 8
     stur X30, [SP, 0]
-    mov x11, x6        // x10 = contador = tamano
+    sub SP, SP, 8
+    stur X6, [SP, 0]
+    sub SP, SP, 8
+    stur X3, [SP, 0]
 loop_fila:
     bl pintar_pixel    // Pintamos el pixel
     add x3, x3, 1     // Avanzamos al siguiente
-    sub x11, x11, 1   // Restamos al contador
-    cbnz x11, loop_fila // mientras el contador no sea 0 loopeamos
+    sub x6, x6, 1   // Restamos al contador
+    cbnz x6, loop_fila // mientras el contador no sea 0 loopeamos
 
+ldr X3, [SP, 0]
+add SP, SP, 8
+ldr X6, [SP, 0]
+add SP, SP, 8
 ldr X30, [SP, 0]
 add SP, SP, 8
 ret
@@ -442,11 +449,16 @@ end_bucket:
 // ========   FIN DEL BUCKET PINTAR UN AREA DETERMINADA  ======== 
 
 // ========   PINTAR PUENTECITOS  ======== 
-// Parametros: x3=xa, x4=y, x5=xb, w10=color a pintar
+// Parametros: x3=xa, x4=y, x5=xb, x12=para darle altura(parametro poco preciso),x13=sentido, w10=color a pintar
 // Aclaraciones: xb debe ser mayor a xa (xb>xa) y la distancia entre el xa y xb debe ser mayor a 2
+// x13==0 puente hacia abajo x13!=0 puente hacia arriba.
 bridge:
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x30
 	stur x30,[SP] 			//|Almaceno x30
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x12
+	stur x12,[SP] 			//|Almaceno x12
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x11
+	stur x11,[SP] 			//|Almaceno x11
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x9
 	stur x9,[SP] 			//|Almaceno x9
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x8
@@ -455,6 +467,8 @@ bridge:
 	stur x7,[SP] 			//|Almaceno x7
 	sub SP,SP,8				//|Reservo espacio en SP para almacenar x3
 	stur x3,[SP]  			//|Almaceno x3
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x2
+	stur x2,[SP] 			//|Almaceno x2
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x30
 	stur x1,[SP] 			//|Almaceno x1
 	sub x7,x5,x3    		//Almaceno la distancia entre xa y xb
@@ -465,6 +479,36 @@ bridge:
 	bl dir_pixel	    	//Almaceno la direccion del segundo pixel (Fin del puente) en x0
 	movz x8,0x2,lsl 00	 	//En x8 almaceno la cantidad de pixeles que quiero sean pintados de cada lado en cada altura
 	add x9,x8,0				//Copio x9 en x8
+	lsr x2,x12,3
+	movz x11,0x2,lsl 00
+	cbz x12, bridge_painter
+initial_high:
+	stur w10,[x1]
+	stur w10,[x0]
+	bl 4
+	add x30,x30,12
+	cbz x13,minus_high
+	cbnz x13,plus_high
+	sub x2,x2,1   
+	sub x12,x12,1
+	cbnz x2, initial_high
+	sub x0,x0,4
+	add x1,x1,4
+	sub x7,x7,2	
+	lsr x2,x12,3
+	cbnz x2, initial_high
+bridge_loop:
+	stur w10,[x1]
+	stur w10,[x0]
+	bl 4
+	add x30,x30,12
+	cbz x13,minus_high
+	cbnz x13,plus_high
+	sub x0,x0,4
+	add x1,x1,4
+	sub x7,x7,2	
+	lsr x12,x12,1
+	cbnz x12,bridge_loop	
 bridge_painter:
 	stur w10,[x1]			//Pinto el inicio del puente
 	stur w10,[x0]			//Pinto el final del puente
@@ -475,16 +519,31 @@ bridge_painter:
 	cmp x7,0x0				//Comparo x7 con 0
 	b.le end_bridge			//Si x7 es menor o igual a 0, termina el programa
 	cbnz x9,bridge_painter	//Si x9 no es cero vuelvo a pintar pixeles en esta linea
-	b decounter_high		//Si x9 es cero baja una posicion los pixeles y establece un nuevo limite para x8
+	b set_high		//Si x9 es cero baja una posicion los pixeles y establece un nuevo limite para x8
 	b.gt bridge_painter		//Si no complete el puente vuelvo a pintar
-decounter_high:
-	add x9,x8,0        		//Copio x9 en x8
-	add x8,x8,1				//Aumento el limite de pixeles a pintar para la siguiente fila
+minus_high:
 	add x0,x0,2560			//Baja el pixel final
 	add x1,x1,2560			//Baja el pixel inicial
+	ret
+plus_high:
+	sub x0,x0,2560			//Sube el pixel final
+	sub x1,x1,2560			//Sube el pixel inicial
+	ret
+set_high:
+	add x9,x8,0        		//Copio x9 en x8
+	bl 4
+	add x30,x30,12
+	cbz x13,minus_high
+	cbnz x13,plus_high
+	sub x11,x11,1
+	cbnz x11, bridge_painter 
+	movz x11,0x2,lsl 00
+	add x8,x8,1				//Aumento el limite de pixeles a pintar para la siguiente fila
 	b bridge_painter		//Vuelve a pintar
 end_bridge:
 	ldur x1,[SP]			//|Devuelve a x1 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
+	ldur x2,[SP]			//|Devuelve a x2 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x3,[SP]			//|Devuelve a x3 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
@@ -493,6 +552,10 @@ end_bridge:
 	ldur x8,[SP]			//|Devuelve a x8 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x9,[SP]			//|Devuelve a x9 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
+	ldur x11,[SP]			//|Devuelve a x11 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
+	ldur x12,[SP]			//|Devuelve a x12 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x30,[SP]			//|Devuelve a x30 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP

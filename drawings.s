@@ -232,56 +232,159 @@ draw_saturn:
 	stur x30,[SP]
 	add x11,x3,0
 	lsr x6,x5,3
-	add x7,x4,0
-	add x8,x4,0
-	movz x10,0xb6,lsl 16
-	movk x10,0x8355,lsl 00
-	bl dibujar_circulo
+	add x7,x4,150
+	movz x10,0x9f,lsl 16
+	movk x10,0x9975,lsl 00
+	sub SP,SP,8
+	stur x4,[SP]
+	sub SP,SP,8
+	stur x3,[SP]
+	sub SP,SP,8
+	stur x5,[SP]
+	sub SP,SP,8
+	stur x6,[SP]
+	add x5,x3,170
+	add x3,x5,0
+	movz x6,0x40,lsl 00
+	bl pintar_fila
+	sub x3,x5,340
+	movz x12,0xc,lsl 00
+	movz x13,0x1,lsl 00
+	bl bridge
+	add x5,x5,64
+	sub x3,x3,64
+	bl pintar_fila
+	ldur x6,[SP]
+	add SP,SP,8
+	movz x12,0x30,lsl 00
+	bl bridge
+	add x3,x3,1
+	sub x4,x4,1
 	movz x25,0x1,lsl 00
 	bl bucket
 	movz x25,0x0,lsl 00
-	movz x10,0x99,lsl 16
-	movk x10,0xcecc,lsl 00
+	add x4,x4,1
+	ldur x5,[SP]
+	add SP,SP,8
+	ldur x3,[SP]
+	sub SP,SP,8
+	movz x10,0xf1,lsl 16
+	movk x10,0x9225,lsl 00
+	bl dibujar_circulo
+	movz x25,0x1,lsl 00
+	bl bucket
+	movz x12,0x0,lsl 00
 	bl set_x3_x5
-	bl bridge
-	bl upper_bridge_and_bucket
-	bl upper_bridge_and_bucket
-	movz x10,0xec,lsl 16
-	movk x10,0x8735,lsl 00
-	bl upper_bridge_and_bucket
-	movz x10,0xff,lsl 16 
-	movk x10,0xd8ba,lsl 00
-	bl upper_bridge_and_bucket
+	movz x25,0x0,lsl 00
+	movz x13,0x0,lsl 00
+	movz x10,0xe5,lsl 16
+	movk x10,0x7300,lsl 00
+	bl upper_bridge
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	bl bucket
 	movz x10,0xc8,lsl 16
 	movk x10,0x4903,lsl 00
-	bl upper_bridge_and_bucket
-	movz x10,0x51,lsl 16
-	movk x10,0x220c,lsl 00
-	bl upper_bridge_and_bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	bl upper_bridge_and_bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	bl lower_bridge_and_bucket
-	movz x10,0x33,lsl 16
-	movk x10,0x0000,lsl 00 
-	bl lower_bridge_and_bucket
-	movz x10,0xe0,lsl 16
-	movk x10,0xa06a,lsl 00
-	bl lower_bridge_and_bucket
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
 	movz x10,0x51,lsl 16
     movk x10,0x220c,lsl 00
-	bl lower_bridge_and_bucket
-	bl lower_bridge_and_bucket
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0xc8,lsl 16
+    movk x10,0x4903,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0x51,lsl 16
+	movk x10,0x220c,lsl 00
+	sub x7,x7,x6
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
 	movz x10,0xc8,lsl 16
 	movk x10,0x4903,lsl 00
-	bl lower_bridge_and_bucket
-	movz x10,0xd4,lsl 16
-	movk x10,0xac0d,lsl 00
-	bl lower_bridge_and_bucket
+	sub x7,x7,x6
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0xff,lsl 16
+	movk x10,0xae0b,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0xe5,lsl 16 
+	movk x10,0x7300,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0x51,lsl 16
+	movk x10,0x220c,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0xc8,lsl 16
+	movk x10,0x4903,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0xe5,lsl 16
+	movk x10,0x7300,lsl 00
+	bl upper_bridge
+	add x3,x11,0
+	add x4,x7,x6
+	add x4,x4,6
+	bl bucket
+	movz x10,0x9f,lsl 16
+	movk x10,0x9975,lsl 00
+	ldur x5,[SP]
+	add SP,SP,8
+	ldur x3,[SP]
+	add SP,SP,8
+	ldur x4,[SP]
+	add SP,SP,8
+	add x5,x3,170
+	sub x3,x3,170
+	movz x12,0xc,lsl 00
+	movz x13,0x0,lsl 00
+	bl bridge
+	add x5,x5,64
+	sub x3,x3,64
+	movz x12,0x30,lsl 00
+	bl bridge
+	add x3,x3,1
+	movz x25,0x1,lsl 00
+	bl bucket
 	b end_saturn
-upper_bridge_and_bucket:
+upper_bridge:
 	sub SP,SP,8
 	stur x30,[SP]
 	sub x7,x7,x6
@@ -289,23 +392,6 @@ upper_bridge_and_bucket:
 	add x3,x11,0
 	bl set_x3_x5
 	bl bridge
-	add x3,x11,0
-	add x4,x7,x6
-	bl bucket
-	ldur x30,[SP]
-	add SP,SP,8
-	ret
-lower_bridge_and_bucket:
-	sub SP,SP,8
-	stur x30,[SP]
-	add x8,x8,x6
-	add x4,x8,0
-	add x3,x11,0
-	bl set_x3_x5
-	bl bridge
-	add x3,x11,0
-	add x4,x8,0
-	bl bucket
 	ldur x30,[SP]
 	add SP,SP,8
 	ret
