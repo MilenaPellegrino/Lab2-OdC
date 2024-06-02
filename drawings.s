@@ -565,4 +565,91 @@ add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
 
+//============= ASTRONAUTA =================//
+
+dibujar_astronauta:
+// cabeza del astronauta
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+
+	movz w10, 0xFFFF    
+	movk w10, 0xFF, lsl 16
+	mov x3, 74
+	mov x4, 150 
+	mov x5, 10
+	bl pintar_circulo
+
+	movz w10, 0x0000    
+	movk w10, 0x00, lsl 16
+	mov x3, 74
+	mov x4, 150 
+	mov x5, 6
+	bl pintar_circulo
+
+//cuerpo
+	movz w10, 0xFFFF      
+	movk w10, 0xFF, lsl 16
+	mov x3, 60 		// Coordenada x donde lo voy a pintar
+	mov x4,	165		// Coordenada y donde lo voy a pintar
+	mov x1, 30		// Ancho
+	mov x2, 3		// Altura
+	bl dibujar_rectangulo
+
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	mov x3, 74
+	mov x4, 168
+	mov x5, 7
+	bl pintar_circulo
+
+//piernas
+//pierna derecha
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	mov x3, 69
+	mov x4, 178
+	mov x5, 3
+	bl pintar_circulo
+
+	movz w10, 0x9B9B      
+	movk w10, 0x9B, lsl 16
+	mov x3, 67 		// Coordenada x donde lo voy a pintar
+	mov x4,	184		// Coordenada y donde lo voy a pintar
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura
+	bl dibujar_rectangulo
+
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	mov x3, 68
+	mov x4, 183
+	mov x5, 2
+	bl pintar_circulo
+
+//pierna izquierda
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	mov x3, 79
+	mov x4, 178
+	mov x5, 3
+	bl pintar_circulo
+
+	movz w10, 0x9B9B      
+	movk w10, 0x9B, lsl 16
+	mov x3, 78 		// Coordenada x donde lo voy a pintar
+	mov x4,	184		// Coordenada y donde lo voy a pintar
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura
+	bl dibujar_rectangulo
+	
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	mov x3, 79
+	mov x4, 183
+	mov x5, 2
+	bl pintar_circulo
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
 
