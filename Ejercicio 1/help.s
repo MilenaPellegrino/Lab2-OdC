@@ -370,81 +370,73 @@ pintar_circulo:
 //x3=coordenada x, x4=coordenada y x10=color a pintar
 //x25==0 bucket normal x25!=0 bucket hasta color!
 bucket: 
-	sub SP,SP,8  		  	//Reservamos espacio en la pila
-	stur x30,[SP,0]       	//Guardamos el valor de x30 en la pila	
-	sub SP,SP,8  		  	//Reservamos espacio en la pila
-	stur x7,[SP,0]       	//Guardamos el valor de x7 en la pila
-	sub SP,SP,8  		  	//Reservamos espacio en la pila
-	stur x8,[SP,0]       	//Guardamos el valor de x8 en la pila
-	sub SP,SP,8  		  	//Reservamos espacio en la pila
-	stur x9,[SP,0]       	//Guardamos el valor de x9 en la pila
-	movz x9,0x0,lsl 00		//Usamos x9 para llevar registro de cuanta SP es usada, lo inicializo en 0
-	bl dir_pixel  			//guardamos en x0 la direccion del pixel a pintar
-	add x30,x30,12
-	cbz x25,normal_bucket
-	cbnz x25,modified_bucket
-	stur w10,[x0]			//Pinto el primer pixel
+	sub SP,SP,8  		  		//Reservamos espacio en la pila
+	stur x30,[SP,0]       		//Guardamos el valor de x30 en la pila	
+	sub SP,SP,8  		  		//Reservamos espacio en la pila
+	stur x7,[SP,0]       		//Guardamos el valor de x7 en la pila
+	sub SP,SP,8  		  		//Reservamos espacio en la pila
+	stur x8,[SP,0]       		//Guardamos el valor de x8 en la pila
+	sub SP,SP,8  		  		//Reservamos espacio en la pila
+	stur x9,[SP,0]       		//Guardamos el valor de x9 en la pila
+	movz x9,0x0,lsl 00			//Usamos x9 para llevar registro de cuanta SP es usada, lo inicializo en 0
+	bl dir_pixel				//Guarda en x0 la dir del pixel a pintar
+	bl normal_or_modified_color	//Guarda en w7 el color a comparar
+	stur w10,[x0]				//Pinto el primer pixel
 	b pixel_painter
+normal_or_modified_color:
+	cbz x25,normal_bucket		//Si x25 es 0 guarda en x7 el color previo del primer pixel
+	cbnz x25,modified_bucket	//Si x25 es !=0 guarda en x7 el color a pintar
 normal_bucket:
-	ldur w7,[x0]   			//en x7 guardamos el color del pixel
+	ldur w7,[x0]   				//en x7 guarda el color del pixel
 	ret
 modified_bucket:
-	add w7,w10,0
+	add w7,w10,0				//en x7 guarda el color a pintar
 	ret
 pixel_painter:
-	sub x0,x0,2560			//ponemos en x0 la dir del pixel superior
-	bl 4
-	add x30,x30,12
-	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
-	cbnz x25,modified_compare
-	add x0,x0,2556			//ponemos en x0 la dir del pixel anterior
-	bl 4
-	add x30,x30,12
-	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
-	cbnz x25,modified_compare
-	add x0,x0,8				//ponemos en x0 la dir del pixel posterior
-	bl 4
-	add x30,x30,12
-	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
-	cbnz x25,modified_compare
-	add x0,x0,2556			//ponemos en x0 la dir del pixel inferior
-	bl 4
-	add x30,x30,12
-	cbz x25,compare		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
-	cbnz x25,modified_compare
-	cbz x9,end_bucket		//Si ya se libero la SP, termino el programa
-	cbnz x9,next_dir		//Si no esta liberada la SP,busco el sig pixel almacenado en SP
+	sub x0,x0,2560				//ponemos en x0 la dir del pixel superior
+	bl normal_or_modified_compare
+	add x0,x0,2556				//ponemos en x0 la dir del pixel anterior
+	bl normal_or_modified_compare
+	add x0,x0,8					//ponemos en x0 la dir del pixel posterior
+	bl normal_or_modified_compare
+	add x0,x0,2556				//ponemos en x0 la dir del pixel inferior
+	bl normal_or_modified_compare
+	cbz x9,end_bucket			//Si ya se libero la SP, termino el programa
+	cbnz x9,next_dir			//Si no esta liberada la SP,busco el sig pixel almacenado en SP
+normal_or_modified_compare:		//Si corresponde, compare pintara el pixel y guardara su direccion en SP
+	cbz x25,compare				
+	cbnz x25,modified_compare	
 compare:
-	ldur w8,[x0]	 		//cargamos el color del pixel a comparar en w8
-	cmp w8,w7				//compara el color de w8 con el color que desea ser reemplazado
-	b.eq dir_to_SP			//Si estos colores son iguales lo pinta y almacena su direccion en SP
+	ldur w8,[x0]	 			//cargamos el color del pixel a comparar en w8
+	cmp w8,w7					//compara el color de w8 con el color que desea ser reemplazado
+	b.eq dir_to_SP				//Si estos colores son iguales lo pinta y almacena su direccion en SP
 	ret
 modified_compare:
-	ldur w8,[x0]
-	cmp w8,w7
-	b.ne dir_to_SP
+	ldur w8,[x0]				//cargamos el color del pixel a comparar en w8
+	cmp w8,w7					//compara el color de w8 con el del color a pintar
+	b.ne dir_to_SP				//Si estos colores son distintos lo pinta y almacena su direccion en SP
 	ret
 dir_to_SP:
-	stur w10,[x0]			//Pinta el pixel
-	sub SP,SP,4				//Hace espacio en SP para la dir del pixel
-	stur w0,[SP,0]			//Almacena la direccion del pixel en SP
-	add x9,x9,1				//Suma 1 al contador de uso de SP
+	stur w10,[x0]				//Pinta el pixel
+	sub SP,SP,4					//Hace espacio en SP para la dir del pixel
+	stur w0,[SP,0]				//Almacena la direccion del pixel en SP
+	add x9,x9,1					//Suma 1 al contador de uso de SP
 	ret
 next_dir:
-	ldur w0,[SP,0]			//Guarda en x0 el pixel almacenado en SP
-	add SP,SP,4				//Libera espacio del SP
-	sub x9,x9,1				//Decrementa el contador de uso de SP
-	b pixel_painter			//Va a pintar el pixel
+	ldur w0,[SP,0]				//Guarda en x0 el pixel almacenado en SP
+	add SP,SP,4					//Libera espacio del SP
+	sub x9,x9,1					//Decrementa el contador de uso de SP
+	b pixel_painter				//Va a pintar el pixel
 end_bucket:
-	ldur x9,[SP,0]			//Devuelve el valor original de x9
-	add SP,SP,8				//Libera espacio del SP
-	ldur x8,[SP,0]			//Devuelve el valor original de x8
-	add SP,SP,8				//Libera espacio del SP
-	ldur x7,[SP,0]			//Devuelve el valor original de x7
-	add SP,SP,8				//Libera espacio del SP
-	ldur x30,[SP,0]			//Devuelve el valor original de x30
-	add SP,SP,8				//Libera espacio del SP
-	ret						//Termina la funcion
+	ldur x9,[SP,0]				//Devuelve el valor original de x9
+	add SP,SP,8					//Libera espacio del SP
+	ldur x8,[SP,0]				//Devuelve el valor original de x8
+	add SP,SP,8					//Libera espacio del SP
+	ldur x7,[SP,0]				//Devuelve el valor original de x7
+	add SP,SP,8					//Libera espacio del SP
+	ldur x30,[SP,0]				//Devuelve el valor original de x30
+	add SP,SP,8					//Libera espacio del SP
+	ret							//Termina la funcion
 //
 // ========   FIN DEL BUCKET PINTAR UN AREA DETERMINADA  ======== 
 
@@ -465,7 +457,9 @@ bridge:
 	stur x8,[SP] 			//|Almaceno x8
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x7
 	stur x7,[SP] 			//|Almaceno x7
-	sub SP,SP,8				//|Reservo espacio en SP para almacenar x3
+	sub SP,SP,8				//|Reservo espacio en SP para almacenar x4
+	stur x4,[SP]  			//|Almaceno x4
+	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x3
 	stur x3,[SP]  			//|Almaceno x3
 	sub SP,SP,8    			//|Reservo espacio en SP para almacenar x2
 	stur x2,[SP] 			//|Almaceno x2
@@ -479,48 +473,66 @@ bridge:
 	bl dir_pixel	    	//Almaceno la direccion del segundo pixel (Fin del puente) en x0
 	movz x8,0x2,lsl 00	 	//En x8 almaceno la cantidad de pixeles que quiero sean pintados de cada lado en cada altura
 	add x9,x8,0				//Copio x9 en x8
-	lsr x2,x12,3
-	movz x11,0x2,lsl 00
-	cbz x12, bridge_painter
+	lsr x2,x12,2			//Le doy un valor a x2 para modificar initial_high
+	lsr x4,x2,1  			//X4 sera mi parametro modificador de altura, le pongo la mitad de x2
+	movz x11,0x2,lsl 00		//Inicializo x11 en 2
+	cbz x12, bridge_painter	//Si la altura es 0 no hago la altura inicial
 initial_high:
-	stur w10,[x1]
-	stur w10,[x0]
-	bl 4
-	add x30,x30,12
-	cbz x13,minus_high
-	cbnz x13,plus_high
-	sub x2,x2,1   
-	sub x12,x12,1
-	cbnz x2, initial_high
-	sub x0,x0,4
-	add x1,x1,4
-	sub x7,x7,2	
-	lsr x2,x12,3
-	cbnz x2, initial_high
+	bl paint_both			//Pinto ambos extremos del puente
+	bl up_or_down			//Sube o baja los pixeles
+	sub x12,x12,1			//Resto la altura total
+	sub x4,x4,1				//Le resta 1 al parametro modificador de altura
+	sub x2,x2,1				//Le resto 1 al total de la altura inicial
+	cbnz x4,initial_high    //Si el parametro para modificar altura no es 0 repito el proceso
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro
+	lsr x4,x2,1				//Guardo en x4 la mitad de x2
+	cbnz x4,initial_high	//Si x2 es 1, voy a bridge_loop
+	lsr x2,x12,2			//Guardo en x2 un cuarto de la altura total
+intermediate_loop:
+	bl paint_both			//Pinto ambos extremos del puente
+	bl up_or_down			//Sube o baja los pixeles
+	sub x12,x12,1			//Resto la altura inicial total
+	sub x2,x2,1				//Resto 1 al parametro de altura intermedia
+	cbz x2,set_x2			//Si el parametro de altura intermedia es 0 avanzo a la sig. parte
+	bl paint_both			//Pinto ambos extremos del puente
+	bl up_or_down			//Sube o baja los pixeles
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro
+	sub x12,x12,1			//Resto la altura inicial total
+	sub x2,x2,1				//Resto 1 al parametro de altura intermedia
+	cbz x2,set_x2			//Si el parametro de altura intermedia es 0 avanzo a la sig.parte
+	bl paint_both			//Pinto ambos extremos del puente
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro
+	bl up_or_down			//Sube o baja los pixeles
+	sub x12,x12,1			//Resto la altura inicial total
+	sub x2,x2,1				//Resto 1 al parametro de altura intermedia
+	cbnz x2,intermediate_loop 	//Si la altura total no es 0, repito bridge_loop	
+set_x2:
+	lsr x2,x12,2			//Seteo el parametro de altura final como un cuarto de x2
 bridge_loop:
-	stur w10,[x1]
-	stur w10,[x0]
-	bl 4
-	add x30,x30,12
-	cbz x13,minus_high
-	cbnz x13,plus_high
-	sub x0,x0,4
-	add x1,x1,4
-	sub x7,x7,2	
-	lsr x12,x12,1
-	cbnz x12,bridge_loop	
+	bl paint_both			//Pinto ambos extremos del puente
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro
+	bl paint_both			//Pinto ambos extremos del puente
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro
+	bl up_or_down			//Sube o baja los pixeles
+	sub x12,x12,1			//Resto la altura inicial total
+	sub x2,x2,1				//Resto uno al parametro de altura final
+	cbz x2,bridge_painter	//Si el parametro de altura final es 0 avanzo a la sig. parte
+	bl paint_both			//Pinto ambos extremos del puente
+	bl up_or_down			//Sube o baja los pixeles
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro
+	sub x12,x12,1			//Resto la altura inicial total
+	sub x2,x2,1				//Resto uno al parametro de altura total
+	cbnz x2,bridge_loop 	//Si la altura total no es 0, repito bridge_loop	
 bridge_painter:
-	stur w10,[x1]			//Pinto el inicio del puente
-	stur w10,[x0]			//Pinto el final del puente
-	add x1,x1,4				//Avanzo el pixel inicial una posicion
-	sub x0,x0,4     		//Retrocedo el pixel final una posicion
+	bl paint_both			//Pinto ambos extremos del puente
+	bl move_center			//Muevo ambos pixeles un paso hacia el centro, compara x7 con 0.
 	sub x9,x9,1				//Resto 1 a x9
-	sub x7,x7,2				//A x7 le resto dos para saber que pinte dos pixeles
-	cmp x7,0x0				//Comparo x7 con 0
-	b.le end_bridge			//Si x7 es menor o igual a 0, termina el programa
 	cbnz x9,bridge_painter	//Si x9 no es cero vuelvo a pintar pixeles en esta linea
-	b set_high		//Si x9 es cero baja una posicion los pixeles y establece un nuevo limite para x8
+	b set_high				//Si x9 es cero baja una posicion los pixeles y establece un nuevo limite para x8
 	b.gt bridge_painter		//Si no complete el puente vuelvo a pintar
+up_or_down:
+	cbz x13,minus_high		//Si x13 es 0 baja ambos pixeles extremos
+	cbnz x13,plus_high		//Si x13 es !=0 sube ambos pixeles extremos
 minus_high:
 	add x0,x0,2560			//Baja el pixel final
 	add x1,x1,2560			//Baja el pixel inicial
@@ -531,21 +543,31 @@ plus_high:
 	ret
 set_high:
 	add x9,x8,0        		//Copio x9 en x8
-	bl 4
-	add x30,x30,12
-	cbz x13,minus_high
-	cbnz x13,plus_high
-	sub x11,x11,1
-	cbnz x11, bridge_painter 
-	movz x11,0x2,lsl 00
+	bl up_or_down			//Sube o baja los pixeles
+	sub x11,x11,1			//Resta 1 a x11
+	cbnz x11, bridge_painter//Si x11 no es 0 repite bridge_painter
+	movz x11,0x2,lsl 00		//Le asigna a x11 el numero 2
 	add x8,x8,1				//Aumento el limite de pixeles a pintar para la siguiente fila
 	b bridge_painter		//Vuelve a pintar
+paint_both:
+	stur w10,[x1]			//Pinto el pixel inicial
+	stur w10,[x0]			//Pinto el pixel final
+	ret
+move_center:
+	sub x0,x0,4				//Muevo el pixel final a la izquierda
+	add x1,x1,4				//Muevo el pixel inicial a la derecha
+	sub x7,x7,2				//Resto 2 a x7 para saber que pinte dos columnas del puente
+	cmp x7,0x0				//Comparo x7 con 0
+	b.le end_bridge			//Si x7 es menor o igual a 0, termina el programa	
+	ret
 end_bridge:
 	ldur x1,[SP]			//|Devuelve a x1 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x2,[SP]			//|Devuelve a x2 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x3,[SP]			//|Devuelve a x3 el valor inicial
+	add SP,SP,8				//|Libero espacio del SP
+	ldur x4,[SP]			//|Devuelve a x4 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
 	ldur x7,[SP]			//|Devuelve a x7 el valor inicial
 	add SP,SP,8				//|Libero espacio del SP
