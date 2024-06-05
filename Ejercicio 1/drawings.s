@@ -626,89 +626,104 @@ ret
 
 //============= ASTRONAUTA =================//
 
+//============= ASTRONAUTA =================//
 dibujar_astronauta:
+//guardamos los valores de los registros usados
+sub sp, sp, 8
+stur x30, [sp, 0]
+sub sp, sp, 8
+stur x5, [sp, 0]
+sub sp, sp, 8
+stur x4, [sp, 0]
+sub sp, sp, 8
+stur x3, [sp, 0]
+sub sp, sp, 8
+stur x1, [sp, 0]
+
 // cabeza del astronauta
-	sub sp, sp, 8
-	stur x30, [sp, 0]
+movz w10, 0xFFFF    
+movk w10, 0xFF, lsl 16
+mov x5, 10
+bl pintar_circulo
 
-	movz w10, 0xFFFF    
-	movk w10, 0xFF, lsl 16
-	mov x3, 74
-	mov x4, 150 
-	mov x5, 10
-	bl pintar_circulo
-
-	movz w10, 0x0000    
-	movk w10, 0x00, lsl 16
-	mov x3, 74
-	mov x4, 150 
-	mov x5, 6
-	bl pintar_circulo
+movz w10, 0x0000    
+movk w10, 0x00, lsl 16
+mov x5, 6
+bl pintar_circulo
 
 //cuerpo
-	movz w10, 0xFFFF      
-	movk w10, 0xFF, lsl 16
-	mov x3, 60 		// Coordenada x donde lo voy a pintar
-	mov x4,	165		// Coordenada y donde lo voy a pintar
-	mov x1, 30		// Ancho
-	mov x2, 3		// Altura
-	bl dibujar_rectangulo
+movz w10, 0xFFFF
+movk w10, 0xFF, lsl 16
+sub x3,x3,14
+add x4,x4,15
+mov x1, 30 // Ancho
+mov x2, 3 // Altura
+bl dibujar_rectangulo
 
-	movz w10, 0xFFFF
-	movk w10, 0xFF, lsl 16
-	mov x3, 74
-	mov x4, 168
-	mov x5, 7
-	bl pintar_circulo
+movz w10, 0xFFFF
+movk w10, 0xFF, lsl 16
+add x3,x3,14
+add x4,x4,3
+mov x5, 7
+bl pintar_circulo
 
 //piernas
 //pierna derecha
-	movz w10, 0xFFFF
-	movk w10, 0xFF, lsl 16
-	mov x3, 69
-	mov x4, 178
-	mov x5, 3
-	bl pintar_circulo
+movz w10, 0xFFFF
+movk w10, 0xFF, lsl 16
+sub x3,x3,5
+add x4,x4,10
+mov x5, 3
+bl pintar_circulo
 
-	movz w10, 0x9B9B      
-	movk w10, 0x9B, lsl 16
-	mov x3, 67 		// Coordenada x donde lo voy a pintar
-	mov x4,	184		// Coordenada y donde lo voy a pintar
-	mov x1, 3		// Ancho
-	mov x2, 5		// Altura
-	bl dibujar_rectangulo
+movz w10, 0x9B9B      
+movk w10, 0x9B, lsl 16
+sub x3,x3,2
+add x4,x4,6
+mov x1, 3       // Ancho
+mov x2, 5       // Altura
+bl dibujar_rectangulo
 
-	movz w10, 0xFFFF
-	movk w10, 0xFF, lsl 16
-	mov x3, 68
-	mov x4, 183
-	mov x5, 2
-	bl pintar_circulo
+movz w10, 0xFFFF
+movk w10, 0xFF, lsl 16
+add x3,x3,1
+sub x4,x4,1
+mov x5, 2
+bl pintar_circulo
 
 //pierna izquierda
-	movz w10, 0xFFFF
-	movk w10, 0xFF, lsl 16
-	mov x3, 79
-	mov x4, 178
-	mov x5, 3
-	bl pintar_circulo
+movz w10, 0xFFFF
+movk w10, 0xFF, lsl 16
+add x3,x3,11
+sub x4,x4,5
+mov x5, 3
+bl pintar_circulo
 
-	movz w10, 0x9B9B      
-	movk w10, 0x9B, lsl 16
-	mov x3, 78 		// Coordenada x donde lo voy a pintar
-	mov x4,	184		// Coordenada y donde lo voy a pintar
-	mov x1, 3		// Ancho
-	mov x2, 5		// Altura
-	bl dibujar_rectangulo
-	
-	movz w10, 0xFFFF
-	movk w10, 0xFF, lsl 16
-	mov x3, 79
-	mov x4, 183
-	mov x5, 2
-	bl pintar_circulo
+movz w10, 0x9B9B      
+movk w10, 0x9B, lsl 16
+sub x3,x3,1
+add x4,x4,6
+mov x1, 3       // Ancho
+mov x2, 5       // Altura
+bl dibujar_rectangulo
 
+movz w10, 0xFFFF
+movk w10, 0xFF, lsl 16
+add x3,x3,1
+sub x4,x4,1
+mov x5, 2
+bl pintar_circulo
+
+ldr x1, [sp, 0]
+add sp, sp, 8
+ldr x3, [sp, 0]
+add sp, sp, 8
+ldr x4, [sp, 0]
+add sp, sp, 8
+ldr x5, [sp, 0]
+add sp, sp, 8
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
+
 
