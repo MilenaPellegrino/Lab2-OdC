@@ -500,3 +500,17 @@ end_bridge:
 
 // ========  FIN DE PINTAR PUENTECITOS  ======== 
 
+// ========  PINTAR LINEAS DIAGONALES ======== 
+// Parametros: x3 = x, x4 = y, w10 = color, x7 = longitud
+
+pintar_linea_diagonal: 
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+
+	mov x5, x3 
+    mov x6, x4 
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+// ========  FIN DE PINTAR LINEAS DIAGONALES ======== 

@@ -10,6 +10,8 @@
 
 .globl main
 
+// Bucle infinito para la animacion 
+
 // Funcion normal 
 main:
     // x0 contiene la direccion base del framebuffer
@@ -42,6 +44,17 @@ loop0:
 	mov x4, 240
 	mov x5, 150
 	bl draw_saturn
+
+	mov x3, 100
+	mov x4, 140
+	bl draw_meteorito
+
+
+
+
+
+
+
 
 	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
 	//Guardamos en x9 la direccion base del GPIO 
