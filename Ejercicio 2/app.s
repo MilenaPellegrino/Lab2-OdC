@@ -34,14 +34,6 @@ main_loop:
 	bl dibujar_astronauta
 	bl step_in_time
 	
-	movz x10,0xff,lsl 16
-	movk x10,0xffff,lsl 00
-	mov x3,320
-	mov x4,240
-	mov x5,200
-	bl triangulo_isosceles
-	mov x5,100
-	bl triangulo_isosceles
 	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
 	//Guardamos en x9 la direccion base del GPIO 
 	mov x9, GPIO_BASE	// La direccion base es diferente al del manual se debe a que es emulada

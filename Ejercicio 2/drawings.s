@@ -228,224 +228,197 @@ ret
 
 // ====== DIBUJAR SATURNO EPICOS TO CHETAO ======
 draw_saturn:
-	sub SP,SP,8
-	stur x30,[SP]
-	add x11,x3,0
-	lsr x6,x5,3
-	add x7,x4,150
-	movz x10,0x9f,lsl 16
-	movk x10,0x9975,lsl 00
-	sub SP,SP,8
-	stur x4,[SP]
-	sub SP,SP,8
-	stur x3,[SP]
-	sub SP,SP,8
-	stur x5,[SP]
-	sub SP,SP,8
-	stur x6,[SP]
-	add x5,x3,170
-	add x3,x5,0
-	movz x6,0x40,lsl 00
-	bl pintar_fila
-	sub x3,x5,340
-	movz x12,0xc,lsl 00
-	movz x13,0x1,lsl 00
-	bl bridge
-	add x5,x5,64
-	sub x3,x3,64
-	bl pintar_fila
-	ldur x6,[SP]
-	add SP,SP,8
-	movz x12,0x30,lsl 00
-	bl bridge
-	add x3,x3,1
-	sub x4,x4,1
-	movz x25,0x1,lsl 00
-	bl bucket
-	movz x25,0x0,lsl 00
-	add x4,x4,1
-	ldur x5,[SP]
-	add SP,SP,8
-	ldur x3,[SP]
-	sub SP,SP,8
-	movz x10,0xf1,lsl 16
-	movk x10,0x9225,lsl 00
-	bl dibujar_circulo
-	movz x25,0x1,lsl 00
-	bl bucket
-	movz x12,0x0,lsl 00
-	bl set_x3_x5
-	movz x25,0x0,lsl 00
-	movz x13,0x0,lsl 00
-	movz x10,0xe5,lsl 16
-	movk x10,0x7300,lsl 00
-	bl upper_bridge
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	bl bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0x51,lsl 16
-    movk x10,0x220c,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xc8,lsl 16
-    movk x10,0x4903,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0x51,lsl 16
-	movk x10,0x220c,lsl 00
-	sub x7,x7,x6
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	sub x7,x7,x6
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xff,lsl 16
-	movk x10,0xae0b,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xe5,lsl 16 
-	movk x10,0x7300,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0x51,lsl 16
-	movk x10,0x220c,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xc8,lsl 16
-	movk x10,0x4903,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0xe5,lsl 16
-	movk x10,0x7300,lsl 00
-	bl upper_bridge
-	add x3,x11,0
-	add x4,x7,x6
-	add x4,x4,6
-	bl bucket
-	movz x10,0x9f,lsl 16
-	movk x10,0x9975,lsl 00
-	ldur x5,[SP]
-	add SP,SP,8
-	ldur x3,[SP]
-	add SP,SP,8
-	ldur x4,[SP]
-	add SP,SP,8
-	add x5,x3,170
-	sub x3,x3,170
-	movz x12,0xc,lsl 00
-	movz x13,0x0,lsl 00
-	bl bridge
-	add x5,x5,64
-	sub x3,x3,64
-	movz x12,0x30,lsl 00
-	bl bridge
-	add x3,x3,1
-	movz x25,0x1,lsl 00
-	bl bucket
-	b end_saturn
+	sub SP,SP,8					//Guardo x30 en SP
+	stur x30,[SP]				//""""""""""""""""
+	add x11,x3,0				//Guardo x3 en x11
+	lsr x6,x5,3					//Guardo en x6 un octavo del radio
+	add x7,x4,150				//Guardo en x7 la altura del primer puente de saturno
+	movz x10,0x9f,lsl 16		//Agrego el color del anillo
+	movk x10,0x9975,lsl 00		//""""""""""""""""""""""""""
+	sub SP,SP,8					//Guardo x4 en SP
+	stur x4,[SP]				//"""""""""""""""
+	sub SP,SP,8					//Guardo x3 en SP
+	stur x3,[SP]				//"""""""""""""""
+	sub SP,SP,8					//Guardo x5 en SP
+	stur x5,[SP]				//"""""""""""""""
+	sub SP,SP,8					//Guardo x6 en SP
+	stur x6,[SP]				//"""""""""""""""
+	add x5,x3,170				//Guardo en x5 la posicion del inicio interno derecho del anillo
+	add x3,x5,0					//Guardo en x3 """""""""""""""""""""""""""""""""""""""""""""""""
+	movz x6,0x40,lsl 00			//Defino el tamaño de pintar_fila en 64
+	bl pintar_fila				//Pinto la fila
+	sub x3,x5,340				//Guardo en x5 la posicion del inicio interno izquierdo del anillo
+	movz x12,0x10,lsl 00		//Seteo la altura del anillo interno superior del anillo en 32
+	movz x13,0x1,lsl 00			//Seteo x13!=0 para que el bridge sea para arriba
+	bl bridge					//Hago el anillo superior interno 
+	add x5,x5,64				//Guardo en x5 la posicion del inicio externo derecho del anillo
+	sub x3,x3,64				//Guardo en x3 la posicion del inicio externo izquierdo del anillo
+	bl pintar_fila				//Pinto la fila
+	ldur x6,[SP]				//Recupero el valor original de x6
+	add SP,SP,8					//Libero memoria del SP
+	movz x12,0x30,lsl 00		//Seteo la altura del anillo externo superior del anillo en 96
+	bl bridge					//Hago el anillo superior externo
+	add x3,x3,1					//Sumo  1 a x3 para hacer bucket dentro del anillo superior
+	sub x4,x4,1					//Resto 1 a x4 """"""""""""""""""""""""""""""""""""""""""""
+	movz x25,0x1,lsl 00			//Seteo x25 !=0 para usar el bucket modificado
+	bl bucket					//Hago bucket en el anillo superior
+	add x4,x4,1					//Sumo 1 a x4
+	ldur x5,[SP]				//Cargo en x5 su valor inicial
+	add SP,SP,8					//"""""""""""""""""""""""""""
+	ldur x3,[SP]				//Cargo en x3 su valor inicial
+	sub SP,SP,8					//Avanzo el SP a donde esta guardado x5
+	movz x10,0xf1,lsl 16		//Seteo el color base del planeta
+	movk x10,0x9225,lsl 00		//"""""""""""""""""""""""""""""""
+	bl dibujar_circulo			//Dibujo el circulo
+	bl bucket					//Hago bucket modificado
+	movz x12,0x0,lsl 00			//Seteo x12==0 para que bridge no tenga altura inicial
+	bl set_x3_x5				//Seteo x3 y x5 para usar el bridge
+	movz x25,0x0,lsl 00			//Seteo x25 en 0 para que bucket sea normal
+	movz x13,0x0,lsl 00			//Seteo x13 en 0 para que bridge sea hacia abajo
+	movz x10,0xe5,lsl 16		//Pongo el color del primer arco inferior de saturno
+	movk x10,0x7300,lsl 00		//""""""""""""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el primer puente inferior
+	bl upper_bridge				//Hago el segundo puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xc8,lsl 16		//Pongo el color del segundo arco inferior de saturno
+	movk x10,0x4903,lsl 00		//""""""""""""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el tercer puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0x51,lsl 16		//Pongo el color del tercer arco inferior de saturno
+    movk x10,0x220c,lsl 00		//""""""""""""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el cuarto puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xc8,lsl 16		//Pongo el color del cuarto arco inferior de saturno
+    movk x10,0x4903,lsl 00		//""""""""""""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el quinto puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0x51,lsl 16		//Pongo el color del quinto arco inferior de saturno
+	movk x10,0x220c,lsl 00		//""""""""""""""""""""""""""""""""""""""""""""""""""
+	sub x7,x7,x6				//Seteo x7 para que el sig puente sea mas arriba
+	bl upper_bridge				//Hago el sexto puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xc8,lsl 16		//Pongo el color del sexto arco inferior
+	movk x10,0x4903,lsl 00		//""""""""""""""""""""""""""""""""""""""
+	sub x7,x7,x6				//Seteo x7 para que el sig. puente sea mas arriba
+	bl upper_bridge				//Hago el septimo puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xff,lsl 16		//Pongo el color del septimo arco inferior
+	movk x10,0xae0b,lsl 00		//""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el octavo puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xe5,lsl 16 		//Pongo el color del octavo arco inferior
+	movk x10,0x7300,lsl 00		//"""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el noveno puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xc8,lsl 16		//Pongo el color del noveno arco inferior
+	movk x10,0x4903,lsl 00		//"""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el decimo puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0x51,lsl 16		//Pongo el color del decimo arco inferior
+	movk x10,0x220c,lsl 00		//"""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el undecimo puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xc8,lsl 16		//Pongo el color del undecimo arco inferior
+	movk x10,0x4903,lsl 00		//"""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el duodecimo puente inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0xe5,lsl 16		//Pongo el color del duodecimo arco inferior
+	movk x10,0x7300,lsl 00		//""""""""""""""""""""""""""""""""""""""""""
+	bl upper_bridge				//Hago el trigesimo arco inferior
+	bl set_and_bucket			//Relleno el arco
+	movz x10,0x9f,lsl 16		//Pongo el color del anillo
+	movk x10,0x9975,lsl 00		//"""""""""""""""""""""""""
+	ldur x5,[SP]				//Pongo x5 en su valor inicial
+	add SP,SP,8					//""""""""""""""""""""""""""""
+	ldur x3,[SP]				//Pongo x3 en su valor inicial
+	add SP,SP,8					//""""""""""""""""""""""""""""
+	ldur x4,[SP]				//Pongo x4 en su valor inicial
+	add SP,SP,8					//""""""""""""""""""""""""""""
+	add x5,x3,170				//Pongo x5 en la posicion del inicio interno derecho del anillo
+	sub x3,x3,170				//Pongo x3 en la posicion del inicio interno izquierdo del anillo
+	movz x12,0x10,lsl 00		//Pongo la altura del anillo interno inferior en 32
+	bl bridge					//Hago el anillo interno inferior
+	add x5,x5,64				//Pongo x5 en la posicion del inicio externo derecho del anillo
+	sub x3,x3,64				//Pongo x3 en la posicion del inicio externo derecho del anillo
+	movz x12,0x30,lsl 00		//Pongo la altura del anillo externo inferior en 96
+	bl bridge					//Hago el anillo externo inferior
+	add x3,x3,1					//Modifico x3 para hacer el bucket
+	movz x25,0x1,lsl 00			//Pongo x25!=0 para hacer el bucket modificado
+	bl bucket					//Relleno el anillo inferior
+	b end_saturn				//Termina saturno
+set_and_bucket:
+	sub SP,SP,8					//Guardo x30 en SP
+	stur x30,[SP]				//""""""""""""""""
+	add x3,x11,0				//Seteo x3 en su valor inicial
+	add x4,x7,x6				//Pongo x4 en un valor para rellenar el arco
+	add x4,x4,6					//"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+	bl bucket					//Relleno el arco inferior.
+	ldur x30,[SP]				//Cargo x30
+	add SP,SP,8					//"""""""""
+	ret
 upper_bridge:
-	sub SP,SP,8
-	stur x30,[SP]
-	sub x7,x7,x6
-	add x4,x7,0
-	add x3,x11,0
-	bl set_x3_x5
-	bl bridge
-	ldur x30,[SP]
-	add SP,SP,8
+	sub SP,SP,8					//Guardo x30 en SP
+	stur x30,[SP]				//""""""""""""""""
+	sub x7,x7,x6				//Resto a x7 la distancia entre puentes
+	add x4,x7,0					//Pongo en x4 el valor de x7
+	add x3,x11,0				//Seteo x3 en su valor inicial
+	bl set_x3_x5				//Preparo x3 y x5 para usar bridge
+	bl bridge					//Hago el puente
+	ldur x30,[SP]				//Cargo x30
+	add SP,SP,8					//"""""""""
 	ret
 end_saturn:
-	ldur x30,[SP]
-	add SP,SP,8
+	ldur x30,[SP]				//Cargo x30
+	add SP,SP,8					//"""""""""
 	ret
+
 
 
 
 set_x3_x5:
-	sub SP,SP,8
-	stur x30,[SP]
-	sub SP,SP,8
-	stur x9,[SP]
-	sub SP,SP,8
-	stur x8,[SP]
-	sub SP,SP,8
-	stur x2,[SP]
-	sub SP,SP,8
-	stur x1,[SP]
-	bl dir_pixel
-	add x5,x3,0
-	add x1,x0,0
-	ldur w9,[x0]
-compare_x3:
-	sub x0,x0,4
-	ldur w8,[x0]
-	cmp w8,w9
-	b.eq decr_x3
-	b.ne compare_x5
+	sub SP,SP,8					//Guardo registros para no perderlos
+	stur x30,[SP]				//""
+	sub SP,SP,8					//""
+	stur x9,[SP]				//""
+	sub SP,SP,8					//""
+	stur x8,[SP]				//""
+	sub SP,SP,8					//""
+	stur x2,[SP]				//""
+	sub SP,SP,8					//""
+	stur x1,[SP]				//""
+	bl dir_pixel				//Guardo en x0 la posicion del pixel (x3,x4)	
+	add x5,x3,0					//Pongo en x5 el valor de x3
+	add x1,x0,0					//Guardo en x1 lo que habia en x0
+	ldur w9,[x0]				//Cargo en w9 el color previo de esta posicion
+compare_x3:	
+	sub x0,x0,4					//Muevo x0 un pixel a la izq.
+	ldur w8,[x0]				//Cargo el color de este pixel en w8
+	cmp w8,w9					//Comparo el color de w8 con el de w9
+	b.eq decr_x3				//Si son iguales decremento x3
+	b.ne compare_x5				//Si no son iguales avanzo a comparar x5
 decr_x3:
-	sub x3,x3,1
-	b compare_x3
+	sub x3,x3,1					//Resto 1 a x3
+	b compare_x3				//Regreso a comparar x3
 compare_x5:
-	add x1,x1,4
-	ldur w8,[x1]
-	cmp w8,w9
-	b.eq acrem_x5
-	b.ne end_aux
-acrem_x5:
-	add x5,x5,1
-	b compare_x5
+	add x1,x1,4					//Muevo x1 un pixel a la izq
+	ldur w8,[x1]				//Cargo el color de este pixel en w8
+	cmp w8,w9					//Comparo el color de w8 con el de w9
+	b.eq acrem_x5				//Si son iguales incremento x5
+	b.ne end_aux				//Si no son iguales termino la funcion
+acrem_x5:	
+	add x5,x5,1					//Incremento x5 en 1
+	b compare_x5				//Regreso a comparar x5
 end_aux:
-	ldur x1,[SP]
-	add SP,SP,8
-	ldur x2,[SP]
-	add SP,SP,8
-	ldur x8,[SP]
-	add SP,SP,8
-	ldur x9,[SP]
-	add SP,SP,8
-	ldur x30,[SP]
-	add SP,SP,8
+	ldur x1,[SP]				//Recupero los valores iniciales
+	add SP,SP,8					//""
+	ldur x2,[SP]				//""
+	add SP,SP,8					//""
+	ldur x8,[SP]				//""
+	add SP,SP,8					//""
+	ldur x9,[SP]				//""
+	add SP,SP,8					//""
+	ldur x30,[SP]				//""
+	add SP,SP,8					//""
 	ret
 
 // ====== FIN DEL EPICO DIBUJO DE SATURNO ======
@@ -651,4 +624,103 @@ add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
 
+//============= ASTRONAUTA =================//
+
+dibujar_astronauta:
+// cabeza del astronauta
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+	sub sp, sp, 8
+	stur x5, [sp, 0]
+	sub sp, sp, 8
+	stur x4, [sp, 0]
+	sub sp, sp, 8
+	stur x3, [sp, 0]
+	sub sp, sp, 8
+	stur x1, [sp, 0]
+
+	movz w10, 0xFFFF    
+	movk w10, 0xFF, lsl 16
+	mov x5, 10
+	bl pintar_circulo
+
+	movz w10, 0x0000    
+	movk w10, 0x00, lsl 16
+	mov x5, 6
+	bl pintar_circulo
+
+//cuerpo
+	movz w10, 0xFFFF      
+	movk w10, 0xFF, lsl 16
+	sub x3,x3,14
+	add x4,x4,15
+	mov x1, 30		// Ancho
+	mov x2, 3		// Altura
+	bl dibujar_rectangulo
+
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,14
+	add x4,x4,3
+	mov x5, 7
+	bl pintar_circulo
+
+//piernas
+//pierna derecha
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	sub x3,x3,5
+	add x4,x4,10
+	mov x5, 3
+	bl pintar_circulo
+
+	movz w10, 0x9B9B      
+	movk w10, 0x9B, lsl 16
+	sub x3,x3,2
+	add x4,x4,6
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura
+	bl dibujar_rectangulo
+
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,1
+	sub x4,x4,1
+	mov x5, 2
+	bl pintar_circulo
+
+//pierna izquierda
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,11
+	sub x4,x4,5
+	mov x5, 3
+	bl pintar_circulo
+
+	movz w10, 0x9B9B      
+	movk w10, 0x9B, lsl 16
+	sub x3,x3,1
+	add x4,x4,6
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura
+	bl dibujar_rectangulo
+	
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,1
+	sub x4,x4,1
+	mov x5, 2
+	bl pintar_circulo
+
+ldr x1, [sp, 0]
+add sp, sp, 8
+ldr x3, [sp, 0]
+add sp, sp, 8
+ldr x4, [sp, 0]
+add sp, sp, 8
+ldr x5, [sp, 0]
+add sp, sp, 8
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
 
