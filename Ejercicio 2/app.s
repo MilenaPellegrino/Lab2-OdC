@@ -10,6 +10,8 @@
 
 .globl main
 
+// Bucle infinito para la animacion 
+
 // Funcion normal 
 main:
     // x0 contiene la direccion base del framebuffer
@@ -34,6 +36,26 @@ main_loop:
 	bl dibujar_astronauta
 	bl step_in_time
 	
+<<<<<<< HEAD
+=======
+
+	mov x3, 320
+	mov x4, 240
+	mov x5, 150
+	bl draw_saturn
+
+	mov x3, 100
+	mov x4, 140
+	bl draw_meteorito
+
+
+
+
+
+
+
+
+>>>>>>> bbdf9d2c1759c0cd6ca3155e9c7f13bd580d21b8
 	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
 	//Guardamos en x9 la direccion base del GPIO 
 	mov x9, GPIO_BASE	// La direccion base es diferente al del manual se debe a que es emulada

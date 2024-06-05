@@ -624,6 +624,7 @@ add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
 
+<<<<<<< HEAD
 //============= ASTRONAUTA =================//
 
 dibujar_astronauta:
@@ -723,4 +724,293 @@ add sp, sp, 8
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
+=======
+// ====== METEORITO ======
+// Parametros: X3 = x (la posicion x del centro de la cabeza del meteorito del circulo digamos), x4 = y (la posicion y del centro ... )
+
+draw_meteorito:
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+
+	// Guardo los valores originales de x3 y x4, para asi poder ir modificando dentro de cada parte del dibujo
+	mov x23, x3
+	mov x24, x4
+
+// ---- Parte naranja simulando "fuego" del meteorito ----
+
+// __ Patitas las linitas del fuego 
+
+	movz w10, 0x631E, lsl 0   
+	movk w10, 0xF0, lsl 16
+
+	// Patita de la izquierda: 
+	sub x3, x23, 32
+	sub x4, x24, 7
+	mov x1, 4
+	mov x2, 9
+	bl dibujar_rectangulo
+
+	sub x3, x23, 35
+	sub x4, x24, 14
+	mov x1, 4
+	mov x2, 8
+	bl dibujar_rectangulo
+
+	// Patita larga = 4 rectangulos 
+	sub x3, x23, 25
+	sub x4, x24, 25
+	mov x1, 5
+	mov x2, 15
+	bl dibujar_rectangulo
+
+ 
+	sub x3, x23, 30
+	sub x4, x24, 20
+	mov x1, 10
+	mov x2, 5
+	bl dibujar_rectangulo
+
+
+	sub x3, x23, 35
+	sub x4, x24, 30
+	mov x1, 10
+	mov x2, 10
+	bl dibujar_rectangulo
+
+
+	sub x3, x23, 25
+	sub x4, x24, 35
+	mov x1, 4
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	sub x3, x23, 37
+	sub x4, x24, 40
+	mov x1, 4
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	sub x3, x23, 40
+	sub x4, x24, 50
+	mov x1, 4
+	mov x2, 12
+	bl dibujar_rectangulo
+
+	sub x3, x23, 35
+	sub x4, x24, 45
+	mov x1, 10
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	sub x3, x23, 25
+	sub x4, x24, 40
+	mov x1, 10
+	mov x2, 12
+	bl dibujar_rectangulo
+
+	sub x3, x23, 20
+	sub x4, x24, 35
+	mov x1, 10
+	mov x2, 12
+	bl dibujar_rectangulo
+
+	sub x3, x23, 15
+	sub x4, x24, 30
+	mov x1, 7
+	mov x2, 7
+	bl dibujar_rectangulo
+
+	sub x3, x23, 7
+	sub x4, x24, 35
+	mov x1, 8
+	mov x2, 7
+	bl dibujar_rectangulo
+
+	sub x3, x23, 2
+	sub x4, x24, 30
+	mov x1, 8
+	mov x2, 7
+	bl dibujar_rectangulo
+
+// ---- Fin de parte naranja simulando "fuego" del meteorito ----
+
+
+// ---- Parte amarilla alrededor de la cabeza ----
+
+	// Circulo general que rodea a la cabeza
+	mov x3, x23
+	mov x4, x24
+	mov x5, 24
+	movz w10, 0xF642, lsl 0   
+	movk w10, 0xF6, lsl 16
+	bl dibujar_circulo	
+	bl bucket
+
+	// __ Patitas las linitas del fuego 
+
+	// Patita de la izquierda: 
+	sub x3, x23, 27
+	sub x4, x24, 5
+	mov x1, 4
+	mov x2, 9
+	bl dibujar_rectangulo
+
+	sub x3, x23, 30
+	sub x4, x24, 10
+	mov x1, 4
+	mov x2, 8
+	bl dibujar_rectangulo
+
+	// Patita larga = 4 rectangulos 
+	sub x3, x23, 20
+	sub x4, x24, 30
+	mov x1, 5
+	mov x2, 15
+	bl dibujar_rectangulo
+
+	sub x3, x23, 25
+	sub x4, x24, 25
+	mov x1, 15
+	mov x2, 5
+	bl dibujar_rectangulo
+
+	sub x3, x23, 30
+	sub x4, x24, 35
+	mov x1, 10
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	sub x3, x23, 33
+	sub x4, x24, 41
+	mov x1, 4
+	mov x2, 10
+	bl dibujar_rectangulo
+
+	// Patita mediana paralela 
+	sub x3, x23, 3
+	sub x4, x24, 30
+	mov x1, 4
+	mov x2, 12
+	bl dibujar_rectangulo
+
+	sub x3, x23, 7
+	sub x4, x24, 29
+	mov x1, 10
+	mov x2, 3
+	bl dibujar_rectangulo
+
+	sub x3, x23, 7
+	sub x4, x24, 36
+	mov x1, 3
+	mov x2, 8
+	bl dibujar_rectangulo
+
+	// Patita chiquita a la derecha 
+	add x3, x23, 14
+	sub x4, x24, 27
+	mov x1, 4
+	mov x2, 9
+	bl dibujar_rectangulo
+
+	add x3, x23, 10
+	sub x4, x24, 33
+	mov x1, 4
+	mov x2, 9
+	bl dibujar_rectangulo
+
+// ---- Fin de parte amarilla alrededor de la cabeza ----
+
+// ---- Cabeza del meteorito (seguro tiene un nombre mas tecnico) ------
+// Ver si se puede mejorar
+	
+
+	// Circulo general
+	mov x3, x23
+	mov x4, x24
+	mov x5, 20	
+	movz w10, 0x7F79    
+	movk w10, 0x79, lsl 16
+	bl dibujar_circulo	
+	bl bucket
+
+	// Circulo para sombrar los circulos chiquitos 
+	mov x5, 17	
+	movz w10, 0x7F79    
+	movk w10, 0x75, lsl 16
+	bl dibujar_circulo	
+	bl bucket
+
+	// Circulo chiquito arriba a la izquierda
+	sub x3, x23, 10
+	sub x4, x24, 10
+	mov x5, 5	
+	movz w10, 0x1614    
+	movk w10, 0x15, lsl 16
+	bl dibujar_circulo	
+	bl bucket
+
+	// Circulo chiquito abajo a la izquierda
+	sub x3, x23, 1
+	add x4, x24, 20
+	mov x5, 5	
+	movz w10, 0x1614    
+	movk w10, 0x15, lsl 16
+	bl dibujar_circulo	
+	bl bucket
+
+	// Rectangulo de la derecha
+	add x3, x23, 20
+	sub x4, x24, 10
+	mov x1, 5
+	mov x2, 10
+	movz w10, 0x1715   
+	movk w10, 0x16, lsl 16
+	bl dibujar_rectangulo
+
+	// Sombra del rectangulo de abajo a la derecha
+	add x3, x23, 18
+	sub x4, x24, 8
+	mov x1, 3
+	mov x2, 6
+	movz w10, 0x3232   
+	movk w10, 0x32, lsl 16
+	bl dibujar_rectangulo
+
+	// Cuadradito arriba a la izquiera 
+	add x3, x23, 16
+	sub x4, x24, 18
+	mov x1, 5
+	mov x2, 5
+	movz w10, 0x3131  
+	movk w10, 0x31, lsl 16
+	bl dibujar_rectangulo
+
+	add x3, x23, 18
+	sub x4, x24, 20
+	mov x1, 4
+	mov x2, 4
+	movz w10, 0x3131  
+	movk w10, 0x32, lsl 16
+	bl dibujar_rectangulo
+
+
+// ---- Fin cabeza del meteorito ------
+
+// ---- Parte rojo fuerte al final ----
+	movz w10, 0x3E3C 
+	movk w10, 0xE1, lsl 16
+
+	sub x3, x23, 40
+	sub x4, x24, 60
+	mov x1, 5
+	mov x2, 5
+	bl dibujar_rectangulo
+
+// ---- Fin parte rojo fuerte al final ----
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+// ====== FIN METEORITO ======
+>>>>>>> bbdf9d2c1759c0cd6ca3155e9c7f13bd580d21b8
 
