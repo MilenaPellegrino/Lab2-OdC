@@ -14,35 +14,34 @@
 main:
     // x0 contiene la direccion base del framebuffer
     mov x20, x0 // Guarda la dirección base del framebuffer en x20
-
-    movz x10, 0xFFFF, lsl 16
-    movk x10, 0xFFFF, lsl 00
-
-    mov x2, SCREEN_HEIGHT         // Y Size
-loop1:
-    mov x1, SCREEN_WIDTH         // X Size
-loop0:
-	stur w10,[x0]  // Colorear el pixel N
-	add x0,x0,4    // Siguiente pixel
-	sub x1,x1,1    // Decrementar contador X
-	cbnz x1,loop0  // Si no terminó la fila, salto
-	sub x2,x2,1    // Decrementar contador Y
-	cbnz x2,loop1  // Si no es la última fila, salto
-
-	bl fondo_degrade
-	bl fondo_estrella
-
-	mov x3, 100
-	mov x4, 100
-	mov x1, 50
-	mov w10, 0xFFFFFF
+main_loop:
+	movz x10,0xff,lsl 16
+	movk x10,0xffff,lsl 00
+	movz x4,0x80
+	movz x3,0x80
+	movz x2,0x80
+	movz x1,0x80
+	bl dibujar_astronauta
+	bl step_in_time
+	add x3,x3,128
+	movz x10,0xff,lsl 16
+	movk x10,0xffff,lsl 00
+	bl dibujar_astronauta
+	bl step_in_time
+	add x3,x3,128
+	movz x10,0xff,lsl 16
+	movk x10,0xffff,lsl 00
+	bl dibujar_astronauta
+	bl step_in_time
 	
-
-	mov x3, 320
-	mov x4, 240
-	mov x5, 150
-	bl draw_saturn
-
+	movz x10,0xff,lsl 16
+	movk x10,0xffff,lsl 00
+	mov x3,320
+	mov x4,240
+	mov x5,200
+	bl triangulo_isosceles
+	mov x5,100
+	bl triangulo_isosceles
 	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
 	//Guardamos en x9 la direccion base del GPIO 
 	mov x9, GPIO_BASE	// La direccion base es diferente al del manual se debe a que es emulada
@@ -108,3 +107,11 @@ moon:
 	bl draw_satelite
 
 	b InfLoop
+
+step_in_time:
+	movz x13,0x1000,lsl 16
+loop_delay:
+	sub x13,x13,1
+	cbnz x13,loop_delay
+	ret
+
