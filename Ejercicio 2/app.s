@@ -1,5 +1,4 @@
-.include "drawings.s"
-
+.include "movimiento_astronauta.s"
 .equ SCREEN_WIDTH,   640
 .equ SCREEN_HEIGHT,  480
 .equ BITS_PER_PIXEL, 32
@@ -17,89 +16,11 @@ main:
     // x0 contiene la direccion base del framebuffer
     mov x20, x0 // Guarda la dirección base del framebuffer en x20
 main_loop:
-	movz x10,0xff,lsl 16
-	movk x10,0xffff,lsl 00
 	movz x4,0x80
 	movz x3,0x80
-	movz x2,0x80
-	movz x1,0x80
 	bl dibujar_astronauta
-	bl step_in_time
-	add x3,x3,128
-	movz x10,0xff,lsl 16
-	movk x10,0xffff,lsl 00
-	bl dibujar_astronauta
-	bl step_in_time
-	add x3,x3,128
-	movz x10,0xff,lsl 16
-	movk x10,0xffff,lsl 00
-	bl dibujar_astronauta
-	bl step_in_time
-	
-<<<<<<< HEAD
-=======
-
-	mov x3, 320
-	mov x4, 240
-	mov x5, 150
-	bl draw_saturn
-
-	mov x3, 100
-	mov x4, 140
-	bl draw_meteorito
-
-
-
-
-
-
-
-
->>>>>>> bbdf9d2c1759c0cd6ca3155e9c7f13bd580d21b8
-	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
-	//Guardamos en x9 la direccion base del GPIO 
-	mov x9, GPIO_BASE	// La direccion base es diferente al del manual se debe a que es emulada
-	
-	// Cargamos en x12 un valor relativamente grande para poder ver la otra escena por pantalla
-	ldr x12, = 0x700000
-
-
+	bl mover_astronauta
 InfLoop:
-
-	// Leemos el estado del 0-31 y lo almacenamos en w14. 
-	// Recordemos que x9 tiene la direccion base del GPIO
-	/*
-	GPIO_GPLEV0 almacena un bit por cada GPIO que se desea leer.
-	Cada bit en el registro refleja el estado actual del GPIO correspondiente:
-    	- 0 (bajo): Indica que el GPIO está en un nivel bajo (pulsador liberado).
-    	- 1 (alto): Indica que el GPIO está en un nivel alto (pulsador presionado).
-	 */
-	ldr w14, [x9, GPIO_GPLEV0]	
-
-#0B2239
-    movz x10, 0x0B, lsl 16
-	movk x10, 0x2239, lsl 00 // color del fondo
-	// Extraccion del estado del bit 2 de w14 y lo guardamos en w11
-	and w11, w14, 0b00000010 // Usamos la mascara binaria 
-
-	/*
-	Si el bit 2 de w14 ahora guardado en w11 está en alto (1), 
-	signfica que se presiono el pulsador, entonces saltamos a la siguiente escena 
-	en este caso, chau saturno hola luna
-	*/
-	cbnz w11, moon	
-
-	// contador
-	mov x13, #0   // Establecemos todos los bits del registro x13 en 0 
-
-	// while(x13 != x12) ...
-	// x13 = 0, x12 = 0x700000
-	// sumamos de a 1 a x13 jajsjsa, asi qeu tenemos para rato
-
-	delay:
-		add x13, x13, #1
-		cmp x13, x12
-		b.ne delay
 	b InfLoop
 
 moon:
@@ -121,11 +42,4 @@ moon:
 	bl draw_satelite
 
 	b InfLoop
-
-step_in_time:
-	movz x13,0x1000,lsl 16
-loop_delay:
-	sub x13,x13,1
-	cbnz x13,loop_delay
-	ret
 

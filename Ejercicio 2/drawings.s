@@ -624,19 +624,22 @@ add sp, sp, 8
 ret
 // ====== FIN SATELITE ======
 
-<<<<<<< HEAD
 //============= ASTRONAUTA =================//
 
 dibujar_astronauta:
 // cabeza del astronauta
 	sub sp, sp, 8
 	stur x30, [sp, 0]
+	sub sp, sp, 4
+	stur w10, [sp, 0]
 	sub sp, sp, 8
 	stur x5, [sp, 0]
 	sub sp, sp, 8
 	stur x4, [sp, 0]
 	sub sp, sp, 8
 	stur x3, [sp, 0]
+	sub sp, sp, 8
+	stur x2, [sp, 0]
 	sub sp, sp, 8
 	stur x1, [sp, 0]
 
@@ -715,16 +718,19 @@ dibujar_astronauta:
 
 ldr x1, [sp, 0]
 add sp, sp, 8
+ldr x2, [sp, 0]
+add sp, sp, 8
 ldr x3, [sp, 0]
 add sp, sp, 8
 ldr x4, [sp, 0]
 add sp, sp, 8
 ldr x5, [sp, 0]
 add sp, sp, 8
+ldr w10, [sp, 0]
+add sp, sp, 4
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
-=======
 // ====== METEORITO ======
 // Parametros: X3 = x (la posicion x del centro de la cabeza del meteorito del circulo digamos), x4 = y (la posicion y del centro ... )
 
@@ -1012,5 +1018,3 @@ ldr x30, [sp, 0]
 add sp, sp, 8
 ret
 // ====== FIN METEORITO ======
->>>>>>> bbdf9d2c1759c0cd6ca3155e9c7f13bd580d21b8
-
