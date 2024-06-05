@@ -15,9 +15,11 @@
 main:
     // x0 contiene la direccion base del framebuffer
     mov x20, x0 // Guarda la dirección base del framebuffer en x20
-main_loop:
-	movz x4,0x80
-	movz x3,0x80
+
+	bl margen_pantalla
+	bl laberinto
+	mov x3, 25
+	mov x4, 435
 	bl dibujar_astronauta
 	bl mover_astronauta
 InfLoop:

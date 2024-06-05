@@ -1018,3 +1018,226 @@ ldr x30, [sp, 0]
 add sp, sp, 8
 ret
 // ====== FIN METEORITO ======
+
+/ ====== MARGEN DEL FONDO =======//
+margen_pantalla:
+    sub sp, sp, 8
+    stur x30, [sp, 0]
+
+    mov x1, 640     //ancho
+    mov x2, 1       //altura
+    mov x3, 0       //coordenada x donde lo voy a pintar
+    mov x4, 0       //coordenada y donde lo voy a pintar
+    mov w10, 0x00FF00   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 640     //ancho
+    mov x2, 1       //altura
+    mov x3, 0       //coordenada x donde lo voy a pintar
+    mov x4, 479         //coordenada y donde lo voy a pintar
+    mov w10, 0x00FF00   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 1   //ancho
+    mov x2, 479         //altura
+    mov x3, 0       //coordenada x donde lo voy a pintar
+    mov x4, 0       //coordenada y donde lo voy a pintar
+    mov w10, 0x00FF00   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 1   //ancho
+    mov x2, 479         //altura
+    mov x3, 639         //coordenada x donde lo voy a pintar
+    mov x4, 0       //coordenada y donde lo voy a pintar
+    mov w10, 0x00FF00   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 60      //ancho
+    mov x2, 1       //altura
+    mov x3, 580         //coordenada x donde lo voy a pintar
+    mov x4, 0       //coordenada y donde lo voy a pintar
+    mov w10, 0x00000    //color verde
+    bl dibujar_rectangulo
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+
+//================ cuadrado ================//
+figura_principal:
+    sub sp, sp, 8
+    stur x30, [sp, 0]
+
+    mov x1, 30  //ancho
+    mov x2, 49          //altura
+    mov x3, 330         //coordenada x donde lo voy a pintar
+    mov x4, 275     //coordenada y donde lo voy a pintar
+    mov w10, 0xFF0000   //color verde
+    bl dibujar_rectangulo
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+
+laberinto:
+
+    sub sp, sp, 8
+    stur x30, [sp, 0]
+
+    mov x1, 75  //ancho
+    mov x2, 4       //altura
+    mov x3, 55      //coordenada x donde lo voy a pintar
+    mov x4, 410     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 100 //ancho
+    mov x2, 4       //altura
+    mov x3, 200         //coordenada x donde lo voy a pintar
+    mov x4, 410     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 170 //ancho
+    mov x2, 4       //altura
+    mov x3, 400         //coordenada x donde lo voy a pintar
+    mov x4, 410     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 229         //altura
+    mov x3, 570         //coordenada x donde lo voy a pintar
+    mov x4, 185     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 200 //ancho
+    mov x2, 4       //altura
+    mov x3, 570         //coordenada x donde lo voy a pintar
+    mov x4, 181     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 160         //altura
+    mov x3, 55      //coordenada x donde lo voy a pintar
+    mov x4, 250     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 150         //altura
+    mov x3, 126         //coordenada x donde lo voy a pintar
+    mov x4, 185     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 280         //altura
+    mov x3, 200         //coordenada x donde lo voy a pintar
+    mov x4, 130     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 129 //ancho
+    mov x2, 4       //altura
+    mov x3, 75      //coordenada x donde lo voy a pintar
+    mov x4, 126     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 70      //altura
+    mov x3, 71      //coordenada x donde lo voy a pintar
+    mov x4, 60      //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 180 //ancho
+    mov x2, 4   //altura
+    mov x3, 75      //coordenada x donde lo voy a pintar
+    mov x4, 60      //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 270     //altura
+    mov x3, 255     //coordenada x donde lo voy a pintar
+    mov x4, 60      //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 180 //ancho
+    mov x2, 4   //altura
+    mov x3, 255     //coordenada x donde lo voy a pintar
+    mov x4, 330     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 100     //altura
+    mov x3, 330     //coordenada x donde lo voy a pintar
+    mov x4, 1       //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 100     //altura
+    mov x3, 330     //coordenada x donde lo voy a pintar
+    mov x4, 170     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 100 //ancho
+    mov x2, 4   //altura
+    mov x3, 334     //coordenada x donde lo voy a pintar
+    mov x4, 170     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 100 //ancho
+    mov x2, 4   //altura
+    mov x3, 330     //coordenada x donde lo voy a pintar
+    mov x4, 101     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 100 //ancho
+    mov x2, 4   //altura
+    mov x3, 330     //coordenada x donde lo voy a pintar
+    mov x4, 270     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 4   //ancho
+    mov x2, 280     //altura
+    mov x3, 500     //coordenada x donde lo voy a pintar
+    mov x4, 70      //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 166 //ancho
+    mov x2, 4   //altura
+    mov x3, 334     //coordenada x donde lo voy a pintar
+    mov x4, 220     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 70  //ancho
+    mov x2, 4   //altura
+    mov x3, 1       //coordenada x donde lo voy a pintar
+    mov x4, 100     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 135 //ancho
+    mov x2, 4   //altura
+    mov x3, 504     //coordenada x donde lo voy a pintar
+    mov x4, 100     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
