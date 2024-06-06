@@ -19809,7 +19809,7 @@ Disassembly of section .debug_info:
   a0:	00c80000 	.inst	0x00c80000 ; undefined
   a4:	00000009 	udf	#9
   a8:	00460000 	.inst	0x00460000 ; undefined
-  ac:	004e0000 	.inst	0x004e0000 ; undefined
+  ac:	00070000 	.inst	0x00070000 ; undefined
   b0:	003a0000 	.inst	0x003a0000 ; NYI
   b4:	80010000 	.inst	0x80010000 ; undefined
 
@@ -19895,14 +19895,5 @@ Disassembly of section .debug_str:
   40:	342e3220 	cbz	w0, 5c684 <Set_Palette+0x14679>
   44:	74730030 	.inst	0x74730030 ; undefined
   48:	2e747261 	uabdl	v1.4s, v19.4h, v20.4h
-  4c:	682f0073 	.inst	0x682f0073 ; undefined
-  50:	2f656d6f 	.inst	0x2f656d6f ; undefined
-  54:	656c696d 	fnmls	z13.h, p2/m, z11.h, z12.h
-  58:	636f442f 	.inst	0x636f442f ; undefined
-  5c:	6e656d75 	umin	v21.8h, v11.8h, v5.8h
-  60:	462f7374 	.inst	0x462f7374 ; undefined
-  64:	2f756361 	umlsl	v1.4s, v27.4h, v5.h[3]
-  68:	2f63646f 	.inst	0x2f63646f ; undefined
-  6c:	3262614c 	.inst	0x3262614c ; undefined
-  70:	43644f2d 	.inst	0x43644f2d ; undefined
-	...
+  4c:	Address 0x4c is out of bounds.
+

@@ -87,9 +87,9 @@ LOAD linker stubs
  .debug_aranges
                 0x0000000000000090       0x30 start.o
 
-.debug_str      0x0000000000000000       0x75
+.debug_str      0x0000000000000000       0x4e
  .debug_str     0x0000000000000000       0x46 app.o
  .debug_str     0x0000000000000046       0x46 drawings.o
  .debug_str     0x0000000000000046       0x46 help.o
- .debug_str     0x0000000000000046       0x2f start.o
-                                         0x3b (size before relaxing)
+ .debug_str     0x0000000000000046        0x8 start.o
+                                         0x47 (size before relaxing)
