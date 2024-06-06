@@ -1019,7 +1019,7 @@ add sp, sp, 8
 ret
 // ====== FIN METEORITO ======
 
-/ ====== MARGEN DEL FONDO =======//
+// ====== MARGEN DEL FONDO =======//
 margen_pantalla:
     sub sp, sp, 8
     stur x30, [sp, 0]

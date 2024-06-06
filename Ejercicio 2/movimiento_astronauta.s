@@ -4,6 +4,8 @@
 .equ GPIO_GPFSEL0, 0x00
 .equ GPIO_GPLEV0,  0x34
 
+set_coord:
+	bl square_dir_to_ast_dir
 mover_astronauta:
 	bl step_in_time
 	mov x9,GPIO_BASE
@@ -51,7 +53,7 @@ loop_arriba:
 	add x1,x1,4
 	ldur w5,[x1]
 	add w2,w2,w5
-	cbnz w2,mover_astronauta
+	cbnz w2,set_coord
 	sub x6,x6,1
 	cbnz x6,loop_arriba
 	bl tapar_ast
@@ -64,14 +66,14 @@ mover_abajo:
 	mov x6,29
 	bl ast_dir_to_square_dir
 	movz x2,0x1,lsl 16
-	movk x2,0x7700,lsl 00
+	movk x2,0xea00,lsl 00
 	add x1,x0,x2
 	ldur w2,[x1]
 loop_abajo:
 	add x1,x1,4
 	ldur w5,[x1]
 	add w2,w2,w5
-	cbnz w2,mover_astronauta
+	cbnz w2,set_coord
 	sub x6,x6,1
 	cbnz x6,loop_abajo
 	bl tapar_ast
@@ -89,7 +91,7 @@ loop_izquierda:
 	add x1,x1,2560
 	ldur w5,[x1]
 	add w2,w2,w5
-	cbnz w2,mover_astronauta
+	cbnz w2,set_coord
 	sub x6,x6,1
 	cbnz x6,loop_izquierda
 	bl tapar_ast
@@ -101,13 +103,13 @@ loop_izquierda:
 mover_derecha:
 	mov x6,48
 	bl ast_dir_to_square_dir
-	sub x1,x0,124
+	add x1,x0,120
 	ldur w2,[x1]
 loop_derecha:
 	add x1,x1,2560
 	ldur w5,[x1]
 	add w2,w2,w5
-	cbnz w2,mover_astronauta
+	cbnz w2,set_coord
 	sub x6,x6,1
 	cbnz x6,loop_derecha
 	bl tapar_ast
@@ -117,7 +119,7 @@ loop_derecha:
 	b mover_astronauta
 
 step_in_time:
-	movz x13,0x40,lsl 16
+	movz x13,0x50,lsl 16
 loop_delay:
 	sub x13,x13,1
 	cbnz x13,loop_delay
