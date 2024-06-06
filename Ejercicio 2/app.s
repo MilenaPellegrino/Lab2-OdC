@@ -8,116 +8,55 @@
 .equ GPIO_GPFSEL0, 0x00
 .equ GPIO_GPLEV0,  0x34
 
+.equ vel_meteorito, 5	// Velocidad del meteorito 
 .globl main
 
 // Bucle infinito para la animacion 
+	InfLoop:
+		cmp x2, 320	// Nos vamos a mover hasta donde este saturno mas o menos
+		b.ge InfLoop_op_normales
 
-// Funcion normal 
+			// Reiniciamos los valores de <x> y de <y>
+			mov x1,0
+			mov x2,0
+			//eor x8,x8,1
+			//mov x5,1
+		InfLoop_op_normales:
+
+		sub x7,x7,1		// Decrementamos para controlar el ritmo de la animacion 
+
+		// Dibujamos todo lo que hay en nuestra pantalla
+		bl fondo_degrade
+		bl fondo_estrella
+
+		bl dibujar_astronauta
+		mov x3, 320
+		mov x4, 240
+		mov x5, 150
+		bl draw_saturn
+
+		mov x3, x1
+		mov x4, x2
+		bl draw_meteorito
+
+		add x1, x1, 1
+		add x2, x2, 1
+		cbnz x7, InfLoop
+
+		sub x1,x1,1
+		sub x2,x2,1
+		ldr x7,=MOV_SOL
+
+		mov x5,0
+
+		mov x0,0xffffff
+		loop:
+			sub x0,x0,1
+			cbnz x0,loop
+		b InfLoop
+
+
 main:
-    // x0 contiene la direccion base del framebuffer
-    mov x20, x0 // Guarda la dirección base del framebuffer en x20
-
-    movz x10, 0xFFFF, lsl 16
-    movk x10, 0xFFFF, lsl 00
-
-    mov x2, SCREEN_HEIGHT         // Y Size
-loop1:
-    mov x1, SCREEN_WIDTH         // X Size
-loop0:
-	stur w10,[x0]  // Colorear el pixel N
-	add x0,x0,4    // Siguiente pixel
-	sub x1,x1,1    // Decrementar contador X
-	cbnz x1,loop0  // Si no terminó la fila, salto
-	sub x2,x2,1    // Decrementar contador Y
-	cbnz x2,loop1  // Si no es la última fila, salto
-
-	bl fondo_degrade
-	bl fondo_estrella
-
-	mov x3, 100
-	mov x4, 100
-	mov x1, 50
-	mov w10, 0xFFFFFF
-	
-
-	mov x3, 320
-	mov x4, 240
-	mov x5, 150
-	bl draw_saturn
-
-	mov x3, 100
-	mov x4, 140
-	bl draw_meteorito
-
-
-
-
-
-
-
-
-	// EMPEZAMOS A METERNOS EN EL HERMOSO Y HORRIBLE MUNDO DEL GPIO 
-	//Guardamos en x9 la direccion base del GPIO 
-	mov x9, GPIO_BASE	// La direccion base es diferente al del manual se debe a que es emulada
-	
-	// Cargamos en x12 un valor relativamente grande para poder ver la otra escena por pantalla
-	ldr x12, = 0x700000
-
-
-InfLoop:
-
-	// Leemos el estado del 0-31 y lo almacenamos en w14. 
-	// Recordemos que x9 tiene la direccion base del GPIO
-	/*
-	GPIO_GPLEV0 almacena un bit por cada GPIO que se desea leer.
-	Cada bit en el registro refleja el estado actual del GPIO correspondiente:
-    	- 0 (bajo): Indica que el GPIO está en un nivel bajo (pulsador liberado).
-    	- 1 (alto): Indica que el GPIO está en un nivel alto (pulsador presionado).
-	 */
-	ldr w14, [x9, GPIO_GPLEV0]	
-
-#0B2239
-    movz x10, 0x0B, lsl 16
-	movk x10, 0x2239, lsl 00 // color del fondo
-	// Extraccion del estado del bit 2 de w14 y lo guardamos en w11
-	and w11, w14, 0b00000010 // Usamos la mascara binaria 
-
-	/*
-	Si el bit 2 de w14 ahora guardado en w11 está en alto (1), 
-	signfica que se presiono el pulsador, entonces saltamos a la siguiente escena 
-	en este caso, chau saturno hola luna
-	*/
-	cbnz w11, moon	
-
-	// contador
-	mov x13, #0   // Establecemos todos los bits del registro x13 en 0 
-
-	// while(x13 != x12) ...
-	// x13 = 0, x12 = 0x700000
-	// sumamos de a 1 a x13 jajsjsa, asi qeu tenemos para rato
-
-	delay:
-		add x13, x13, #1
-		cmp x13, x12
-		b.ne delay
-	b InfLoop
-
-moon:
-	mov x0, x20
-	movz w10, 0x29, lsl 16
-	movk w10, 0x2936, lsl 00 //color del fondo
-
-	bl fondo_degrade
-	bl fondo_estrella
-
-	mov x3, 320
-	mov x4, 240
-	mov x5, 150
-	bl draw_moon
-
-	mov x3, 300
-	mov x4, 300
-	mov w10, 0xFFFFFF
-	bl draw_satelite
-
-	b InfLoop
+	mov x2, 0	// En x2 guardamos la direccion vertical (y) que vamos a mover al meteorito 
+	mov x1, 0 	// En x1 guardamos la direccion horizontal (x) que vamos a mover al meteorito
+	mov x7, vel_meteorito	// Guardamos en x7 la velocidad del meteorito 
