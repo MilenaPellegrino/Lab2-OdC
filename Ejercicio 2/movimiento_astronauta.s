@@ -4,11 +4,14 @@
 .equ GPIO_GPFSEL0, 0x00
 .equ GPIO_GPLEV0,  0x34
 
-set_coord:
-	bl square_dir_to_ast_dir
+move_astronaut:
+	sub SP,SP,8
+	stur x30,[SP]
+	mov x19,0
 mover_astronauta:
 	bl step_in_time
 	mov x9,GPIO_BASE
+	bl check_final
 	ldr w14, [x9, GPIO_GPLEV0]	
 	and w11, w14, 0b00000010// Usamos la mascara binaria en este caso es para w 
 	cbnz w11,mover_arriba
@@ -29,10 +32,12 @@ ast_dir_to_square_dir:
 	ldur x30,[SP]
 	add SP,SP,8
 	ret
+
 square_dir_to_ast_dir:
 	add x4,x4,10
 	add x3,x3,14
 	ret
+
 tapar_ast:
 	sub SP,SP,8
 	stur x30,[SP]
@@ -44,6 +49,11 @@ tapar_ast:
 	ldur x30,[SP]
 	add SP,SP,8
 	ret
+
+set_coord:
+	bl square_dir_to_ast_dir
+	b mover_astronauta
+
 mover_arriba:
 	mov x6,29
 	bl ast_dir_to_square_dir
@@ -59,7 +69,8 @@ loop_arriba:
 	bl tapar_ast
 	bl square_dir_to_ast_dir
 	sub x4,x4,1
-	bl dibujar_astronauta
+	bl dibujar_astronauta2
+	mov x19,1
 	b mover_astronauta
 
 mover_abajo:
@@ -80,6 +91,7 @@ loop_abajo:
 	bl square_dir_to_ast_dir
 	add x4,x4,1
 	bl dibujar_astronauta
+	mov x19,0
 	b mover_astronauta
 
 mover_izquierda:
@@ -97,7 +109,10 @@ loop_izquierda:
 	bl tapar_ast
 	bl square_dir_to_ast_dir
 	sub x3,x3,1
+	cbnz x19,8
 	bl dibujar_astronauta
+	cbz x19,8
+	bl dibujar_astronauta2
 	b mover_astronauta
 
 mover_derecha:
@@ -115,13 +130,21 @@ loop_derecha:
 	bl tapar_ast
 	bl square_dir_to_ast_dir
 	add x3,x3,1
+	cbnz x19,8
 	bl dibujar_astronauta
+	cbz x19,8
+	bl dibujar_astronauta2
 	b mover_astronauta
-
-step_in_time:
-	movz x13,0x50,lsl 16
-loop_delay:
-	sub x13,x13,1
-	cbnz x13,loop_delay
+check_final:
+	mov x7,40
+	cmp x4,x7
+	b.lt 8
 	ret
+	mov x7,560
+	cmp x3,x7
+	b.ge 8
+	ret
+	ldur x30,[SP]
+	ret
+
 

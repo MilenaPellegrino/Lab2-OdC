@@ -80,6 +80,7 @@ dibujar_rectangulo:
 ret
 
 // ========   FIN DE DIBUJAR RECTANGULO EN LA PANTALLA  ======== 
+// Parametros: x3 = x, x4 = y, ancho del rectangulo = x1, altura del rectangulo = x2, color = w10 (color de fondo)
 
 // ========   PINTAR UNA FILA EN LA PANTALLA  ======== 
 // VER PORQUE NO LO PINTA BIEN (no funciona el color)
@@ -107,136 +108,6 @@ ret
 
 
 // ========   FIN DE PINTAR UNA FILA EN LA PANTALLA  ======== 
-
-// ========   TRIANGULO TIPO 1  ======== 
-// PARAMETROS: x3 = x, x4 = y, (coordenadas del vertice superior) x1 = tamano, w10 = color
-// ACLRACIONES: La punta del triangulo esta abajo a al derecha
-
-dibujar_triangulo1:
-sub SP, SP, 8 						
-stur X30, [SP, 0]
-
-	mov x9, x1
-	mov x13, x3
-	triangleLoop1:
-		mov x3, x13				//guardo en x13 la coordenada x del primer pixel de la fila
-		mov x11, x1
-			add x11, x11, 1
-		sub x11, x11, x9
-
-		printTriangle1:
-			bl pintar_pixel
-			add x3, x3, 1			//sumo 1 a la coord x
-			sub x11, x11, 1			//resto el contador de largo de fila
-			cbnz x11, printTriangle1 // si no llegue al final de la fila, pinto otro pixel
-			sub x13, x13, 1         // le resto 1 a la coordenada x del primer pixel de la fila almacenada en x13
-			add x4, x4, 1			//sumo 1 a la coord y
-			sub x9, x9, 1           //resto el contador de altura
-			cbnz x9, triangleLoop1 // si no llegue a la ultima fila, repito
-ldr X30, [SP, 0]					 			
-add SP, SP, 8	
-ret
-
-// ========   FIN TRIANGULO TIPO 1  ======== 
-
-
-// ========   TRIANGULO TIPO 2  ======== 
-// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
-// ACLARACIONES: La punta del triangulo esta abajo a la izquierda
-
-dibujar_triangulo2:
-sub SP, SP, 8 						
-stur X30, [SP, 0]
-
-	mov x9, x1
-	mov x13, x3
-	triangleLoop2:
-		mov x3, x13				//guardo en x13 la coordenada x del primer pixel de la fila
-		mov x11, x1
-			add x11, x11, 1
-		sub x11, x11, x9
-
-		printTriangle2:
-			bl pintar_pixel
-			add x3, x3, 1			//sumo 1 a la coord x
-			sub x11, x11, 1			//resto el contador de largo de fila
-			cbnz x11, printTriangle2 // si no llegue al final de la fila, pinto otro pixel
-			add x4, x4, 1			//sumo 1 a la coord y
-			sub x9, x9, 1           //resto el contador de altura
-			cbnz x9, triangleLoop2 // si no llegue a la ultima fila, repito
-ldr X30, [SP, 0]					 			
-add SP, SP, 8	
-ret
-
-// ========   FIN TRIANGULO TIPO 2  ======== 
-
-// ========   TRIANGULO TIPO 3  ======== 
-// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
-// ACLARACION: La punta esta para arriba
-
-dibujar_triangulo3:
-	// Paints a triangle given a (x,y) coords (x2, x1) a height (x5) and a color (x3)
-	mov x17, x30
-    mov x24, x7
-    mov x25, x1
-    mov w22, w10
-    mov x21, x4
-	mov x7, 1  //  x7 = x22 x1 = x23
-	bl pintar_pixel
-loopT:
-	bl pintar_fila  // Paint row 
-	add x4, x4, 1  
-	bl pintar_fila
-
-	add x8, x8, 1  
-	sub x4, x4, 1  // Next row
-
-	add x7, x7, 2  // Increment row size
-
-	sub x1, x1, 1  // Decrement height counter
-	cmp xzr, x1    // Compare with 0
-	b.lt loopT     // If bigger than 0 repeat, else continue
-    mov x7, x24
-    mov x1, x25
-	ret x17
-
-// ========   FIN TRIANGULO TIPO 3  ======== 
-
-
-// ========   TRIANGULO TIPO 3.1  ======== 
-// PARAMETROS: x3 = x, x4 = y, (x,y son las coordenadas del vertice superior) x1 = tamano, w10 color
-// ACLARACION: La punta esta para abajo (invertido del tipo 3)
-
-// PARAMETROS: x3 = x (coordenada inicial x), x4 = y (coordenada inicial y), x5 = tamano, w10 = color
-/*dibujar_triangulo3_inv:
- dibujar_triangulo3_inv:
-    sub SP, SP, 16        // Reservar espacio en la pila
-    stp X29, X30, [SP, 8] // Guardar los registros X29 y X30 en la pila
-    mov X29, SP           // Frame pointer
-
-    mov x24, x1           // Guardar el tamaño del triángulo
-    mov x22, x3           // Guardar coordenada x inicial
-    mov x21, x4           // Guardar coordenada y inicial
-
-    mov x6, x1            // Inicializar ancho del triángulo igual al tamaño
-    mov x2, 1             // Altura inicial del triángulo (1 pixel de alto por fila)
-
-loop_trian3_inv:
-    // Parametros: x3 = x, x4 = y, x6 = ancho de la fila, w10 = color
-    bl pintar_fila         // Pintar la fila actual
-    add x4, x4, 1          // Mover a la siguiente fila (incrementar y)
-    sub x3, x3, 1          // Ajustar coordenada x para la nueva fila (mover a la izquierda)
-    sub x6, x6, 2          // Reducir el ancho de la fila
-
-    subs x1, x1, 1         // Decrementar el tamaño
-    bne loop_trian3_inv    // Si el tamaño no es 0, repetir el bucle
-
-    ldp X29, X30, [SP, 8]  // Restaurar los registros X29 y X30
-    add SP, SP, 16         // Liberar espacio en la pila
-    ret
-
-*/
-// ========   FIN TRIANGULO TIPO 3.1  ======== 
 
 // ========   DIBUJAR CIRCULO POR LA PANTALLA  ======== 
 // Parametros: x3 = coordenada x del centro, x4 = coordenada y del centro, x5 = radio,  w10 = color
@@ -585,17 +456,12 @@ end_bridge:
 
 // ========  FIN DE PINTAR PUENTECITOS  ======== 
 
-// ========  PINTAR LINEAS DIAGONALES ======== 
-// Parametros: x3 = x, x4 = y, w10 = color, x7 = longitud
 
-pintar_linea_diagonal: 
-	sub sp, sp, 8
-	stur x30, [sp, 0]
+step_in_time:
+	movz x13,0x40,lsl 16
+loop_delay:
+	sub x13,x13,1
+	cbnz x13,loop_delay
+	ret
 
-	mov x5, x3 
-    mov x6, x4 
-
-ldr x30, [sp, 0]
-add sp, sp, 8
-ret
-// ========  FIN DE PINTAR LINEAS DIAGONALES ======== 
+	

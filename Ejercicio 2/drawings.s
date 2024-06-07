@@ -53,6 +53,24 @@ ret
 fondo_estrella:
     sub SP,SP,8     //reservamos espacio en la pila
     stur x30,[SP]	// guardamos el valor de x3 en la pila
+	sub SP,SP,8
+	stur x30,[SP]
+	sub SP,SP,8
+	stur x1,[SP]
+	sub SP,SP,8
+	stur x2,[SP]
+	sub SP,SP,8
+	stur x3,[SP]
+	sub SP,SP,8
+	stur x4,[SP]
+	sub SP,SP,8
+	stur w10,[SP]
+	sub SP,SP,4
+	stur x5,[SP]
+	sub SP,SP,8
+	stur x11,[SP]
+	sub SP,SP,8
+
     mov w10, 0xFFFFFF // COLOR
 //----------------filas_del_principio-------------------------
 	mov x3, 600
@@ -198,6 +216,20 @@ fondo_estrella:
 //---------------------------------------------------//
     ldur x30,[SP]   
     add SP,SP,8
+	ldr x1, [sp, 0]
+add sp, sp, 8
+ldr x2, [sp, 0]
+add sp, sp, 8
+ldr x5, [sp, 0]
+add sp, sp, 8
+ldr x3, [sp, 0]
+add sp, sp, 8
+ldr x4, [sp, 0]
+add sp, sp, 8
+ldr x11, [sp, 0]
+add sp, sp, 8
+ldr w10, [sp, 0]
+add sp, sp, 4
 ret
 
 // ====== FIN FONDO DE ESTRELLAS ======
@@ -731,12 +763,124 @@ add sp, sp, 4
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
+
+//===============ASTRONAUTA 2 =================
+
+dibujar_astronauta2:
+// cabeza del astronauta
+	sub sp, sp, 8
+	stur x30, [sp, 0]
+	sub sp, sp, 4
+	stur w10, [sp, 0]
+	sub sp, sp, 8
+	stur x5, [sp, 0]
+	sub sp, sp, 8
+	stur x4, [sp, 0]
+	sub sp, sp, 8
+	stur x3, [sp, 0]
+	sub sp, sp, 8
+	stur x2, [sp, 0]
+	sub sp, sp, 8
+	stur x1, [sp, 0]
+
+	movz w10, 0xFFFF    
+	movk w10, 0xFF, lsl 16
+	mov x5, 10
+	bl pintar_circulo
+
+
+//cuerpo
+	movz w10, 0xFFFF      
+	movk w10, 0xFF, lsl 16
+	sub x3,x3,14
+	add x4,x4,15
+	mov x1, 30		// Ancho
+	mov x2, 3		// Altura
+	bl dibujar_rectangulo
+
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,14
+	add x4,x4,3
+	mov x5, 7
+	bl pintar_circulo
+
+//piernas
+//pierna derecha
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	sub x3,x3,5
+	add x4,x4,10
+	mov x5, 3
+	bl pintar_circulo
+
+	movz w10, 0x9B9B      
+	movk w10, 0x9B, lsl 16
+	sub x3,x3,2
+	add x4,x4,6
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura
+	bl dibujar_rectangulo
+
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,1
+	sub x4,x4,1
+	mov x5, 2
+	bl pintar_circulo
+
+//pierna izquierda
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,11
+	sub x4,x4,5
+	mov x5, 3
+	bl pintar_circulo
+
+	movz w10, 0x9B9B      
+	movk w10, 0x9B, lsl 16
+	sub x3,x3,1
+	add x4,x4,6
+	mov x1, 3		// Ancho
+	mov x2, 5		// Altura
+	bl dibujar_rectangulo
+	
+	movz w10, 0xFFFF
+	movk w10, 0xFF, lsl 16
+	add x3,x3,1
+	sub x4,x4,1
+	mov x5, 2
+	bl pintar_circulo
+
+ldr x1, [sp, 0]
+add sp, sp, 8
+ldr x2, [sp, 0]
+add sp, sp, 8
+ldr x3, [sp, 0]
+add sp, sp, 8
+ldr x4, [sp, 0]
+add sp, sp, 8
+ldr x5, [sp, 0]
+add sp, sp, 8
+ldr w10, [sp, 0]
+add sp, sp, 4
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+// ====== FIN ASTRONAUTA ======
+
+
 // ====== METEORITO ======
 // Parametros: X3 = x (la posicion x del centro de la cabeza del meteorito del circulo digamos), x4 = y (la posicion y del centro ... )
 
 draw_meteorito:
 	sub sp, sp, 8
 	stur x30, [sp, 0]
+
+	sub sp, sp, 8
+	stur x3, [sp, 0]
+	sub sp, sp, 8
+	stur x4, [sp, 0]
 
 	// Guardo los valores originales de x3 y x4, para asi poder ir modificando dentro de cada parte del dibujo
 	mov x23, x3
@@ -849,8 +993,10 @@ draw_meteorito:
 	mov x5, 24
 	movz w10, 0xF642, lsl 0   
 	movk w10, 0xF6, lsl 16
-	bl dibujar_circulo	
+	bl dibujar_circulo
+	mov x25, 1	
 	bl bucket
+	//bl pintar_circulo
 
 	// __ Patitas las linitas del fuego 
 
@@ -937,14 +1083,18 @@ draw_meteorito:
 	movz w10, 0x7F79    
 	movk w10, 0x79, lsl 16
 	bl dibujar_circulo	
+	movz x25,0x1,lsl 00
 	bl bucket
+	//bl pintar_circulo
 
 	// Circulo para sombrar los circulos chiquitos 
 	mov x5, 17	
 	movz w10, 0x7F79    
 	movk w10, 0x75, lsl 16
 	bl dibujar_circulo	
+	movz x25,0x1,lsl 00
 	bl bucket
+	//bl pintar_circulo
 
 	// Circulo chiquito arriba a la izquierda
 	sub x3, x23, 10
@@ -953,7 +1103,9 @@ draw_meteorito:
 	movz w10, 0x1614    
 	movk w10, 0x15, lsl 16
 	bl dibujar_circulo	
+	movz x25,0x1,lsl 00
 	bl bucket
+	//bl pintar_circulo
 
 	// Circulo chiquito abajo a la izquierda
 	sub x3, x23, 1
@@ -962,7 +1114,9 @@ draw_meteorito:
 	movz w10, 0x1614    
 	movk w10, 0x15, lsl 16
 	bl dibujar_circulo	
+	movz x25,0x1,lsl 00
 	bl bucket
+	//bl pintar_circulo
 
 	// Rectangulo de la derecha
 	add x3, x23, 20
@@ -1014,10 +1168,17 @@ draw_meteorito:
 
 // ---- Fin parte rojo fuerte al final ----
 
+
+ldr x4, [sp, 0]
+add sp, sp, 8
+ldr x3, [sp, 0]
+add sp, sp, 8
+
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
 // ====== FIN METEORITO ======
+
 
 // ====== MARGEN DEL FONDO =======//
 margen_pantalla:
@@ -1052,27 +1213,26 @@ margen_pantalla:
     mov w10, 0x00FF00   //color verde
     bl dibujar_rectangulo
 
-    mov x1, 60      //ancho
-    mov x2, 1       //altura
-    mov x3, 580         //coordenada x donde lo voy a pintar
-    mov x4, 0       //coordenada y donde lo voy a pintar
-    mov w10, 0x00000    //color verde
-    bl dibujar_rectangulo
-
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
 
-//================ cuadrado ================//
-figura_principal:
+margen_pantalla2:
     sub sp, sp, 8
     stur x30, [sp, 0]
 
-    mov x1, 30  //ancho
-    mov x2, 49          //altura
-    mov x3, 330         //coordenada x donde lo voy a pintar
-    mov x4, 275     //coordenada y donde lo voy a pintar
-    mov w10, 0xFF0000   //color verde
+    mov x1, 640     //ancho
+    mov x2, 8       //altura
+    mov x3, 0       //coordenada x donde lo voy a pintar
+    mov x4, 0       //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 640     //ancho
+    mov x2, 8       //altura
+    mov x3, 0       //coordenada x donde lo voy a pintar
+    mov x4, 471         //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
     bl dibujar_rectangulo
 
 ldr x30, [sp, 0]
@@ -1144,100 +1304,174 @@ laberinto:
     mov x2, 4       //altura
     mov x3, 75      //coordenada x donde lo voy a pintar
     mov x4, 126     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 4   //ancho
     mov x2, 70      //altura
     mov x3, 71      //coordenada x donde lo voy a pintar
     mov x4, 60      //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 180 //ancho
     mov x2, 4   //altura
     mov x3, 75      //coordenada x donde lo voy a pintar
     mov x4, 60      //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 4   //ancho
     mov x2, 270     //altura
     mov x3, 255     //coordenada x donde lo voy a pintar
     mov x4, 60      //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 180 //ancho
     mov x2, 4   //altura
     mov x3, 255     //coordenada x donde lo voy a pintar
     mov x4, 330     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 4   //ancho
     mov x2, 100     //altura
     mov x3, 330     //coordenada x donde lo voy a pintar
     mov x4, 1       //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 4   //ancho
     mov x2, 100     //altura
     mov x3, 330     //coordenada x donde lo voy a pintar
     mov x4, 170     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 100 //ancho
     mov x2, 4   //altura
     mov x3, 334     //coordenada x donde lo voy a pintar
     mov x4, 170     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 100 //ancho
     mov x2, 4   //altura
     mov x3, 330     //coordenada x donde lo voy a pintar
     mov x4, 101     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 100 //ancho
     mov x2, 4   //altura
     mov x3, 330     //coordenada x donde lo voy a pintar
     mov x4, 270     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 4   //ancho
-    mov x2, 280     //altura
+    mov x2, 270     //altura
     mov x3, 500     //coordenada x donde lo voy a pintar
-    mov x4, 70      //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
+    mov x4, 80      //coordenada y donde lo voy a pintar
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
     bl dibujar_rectangulo
 
     mov x1, 166 //ancho
     mov x2, 4   //altura
     mov x3, 334     //coordenada x donde lo voy a pintar
     mov x4, 220     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
     bl dibujar_rectangulo
 
     mov x1, 70  //ancho
     mov x2, 4   //altura
     mov x3, 1       //coordenada x donde lo voy a pintar
     mov x4, 100     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
-    bl dibujar_rectangulo
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
+	bl dibujar_rectangulo
 
     mov x1, 135 //ancho
     mov x2, 4   //altura
     mov x3, 504     //coordenada x donde lo voy a pintar
     mov x4, 100     //coordenada y donde lo voy a pintar
-    mov w10, 0xFFFFFF   //color verde
+    movz w10, 0x9B9B, lsl 00  //color gris
+	movk w10, 0x9B, lsl 16
     bl dibujar_rectangulo
 
 ldr x30, [sp, 0]
 add sp, sp, 8
 ret
+
+ventana:
+    sub sp, sp, 8
+    stur x30, [sp, 0]
+
+    mov x1, 305 //ancho
+    mov x2, 25   //altura
+    mov x3, 334		//coordenada x donde lo voy a pintar
+    mov x4, 1     //coordenada y donde lo voy a pintar
+    mov w10, 0xFFFFFF   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 79 //ancho
+    mov x2, 20   //altura
+    mov x3, 550		//coordenada x donde lo voy a pintar
+    mov x4, 3     //coordenada y donde lo voy a pintar
+    mov w10, 0x000020   //color verde
+    bl dibujar_rectangulo
+
+    mov x1, 50 //ancho
+    mov x2, 20   //altura
+    mov x3, 350		//coordenada x donde lo voy a pintar
+    mov x4, 3     //coordenada y donde lo voy a pintar
+    mov w10, 0x000020   //color verde
+    bl dibujar_rectangulo
+
+	mov x3, 370
+	mov x4, 15
+	bl dibujar_astronauta2
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+ret
+// ====== FIN MARGEN DEL FONDO =======//
+
+// ====== DIBUJAR UNA ESTRELLA ======
+draw_star: 
+	sub SP,SP,8
+	stur x30,[SP]
+
+	movz x10, 0x00, lsl 16
+	movk x10, 0x0000, lsl 00
+	// Posiciones iniciales de x3 y x4 
+	mov x3, x23
+	mov x4, x24 
+	mov x1, 7 //ancho 
+	mov x2, 3 // altuta
+	bl dibujar_rectangulo
+
+	mov x1, 3 //ancho 
+	mov x2, 7 // altuta
+	add x3, x23, 2
+	sub x4, x24, 2
+	bl dibujar_rectangulo
+
+ldr x30, [sp, 0]
+add sp, sp, 8
+
+ret
+// ====== FIN DIBUJAR UNA ESTRELLA ======
